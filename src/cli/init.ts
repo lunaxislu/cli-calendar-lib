@@ -181,7 +181,19 @@ export const init = new Command()
         return logger.info("Execution terminated.");
       }
 
+      /**
+       * module.json write
+       */
       const packageInfo = getPackageInfo();
+      // isTsx 값에 따라 'javascript' 또는 'typescript' 폴더를 선택
+      const languageFolder = isTsx ? "typescript" : "javascript";
+      // styleType 값에 따라 'calendar-css-module' 또는 'calendar-tw' 폴더를 선택
+      const styleFolder =
+        styleChoice === "CSS Modules" ? "calendar-css-module" : "calendar-tw";
+
+      // pathResolve 경로 동적으로 생성
+      const pathResolve = `https://github.com/lunaxislu/cli-calendar-lib/tree/main/src/components/${languageFolder}/${styleFolder}`;
+
       // 6. module.json 파일 생성
       const moduleJson = {
         name: "Calendar",
@@ -192,10 +204,8 @@ export const init = new Command()
         isTsx: projectInfo.isTsx,
         isNext: projectInfo.isNext,
         isUsingAppDir: projectInfo.isUsingAppDir,
-        calendar: {
-          path: "./src/calendar",
-          styleType: styleChoice,
-        },
+        styleType: styleChoice,
+        pathResolve: pathResolve,
       };
 
       await fs.writeFile(
