@@ -84,15 +84,26 @@ export const init = new Command()
         if (!tailwindConfigPath) {
           logger.info("No tailwind.config file found. Creating one...");
 
-          // Tailwind config 생성
-          await execa(
-            packageManager === "npm" ? "install" : "add",
-            ["tailwindcss", "init"],
-            {
+          // Tailwind config 생성 (패키지 매니저에 맞춰 실행)
+          if (packageManager === "npm") {
+            await execa("npx", ["tailwindcss", "init", "-p"], {
               cwd,
               stdio: "inherit",
-            },
-          );
+            });
+          }
+          if (packageManager === "yarn") {
+            await execa("yarn", ["tailwindcss", "init", "-p"], {
+              cwd,
+              stdio: "inherit",
+            });
+          }
+          if (packageManager === "pnpm") {
+            await execa("pnpx", ["tailwindcss", "init", "-p"], {
+              cwd,
+              stdio: "inherit",
+            });
+          }
+
           logger.success("Tailwind configuration created.");
         } else {
           logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
@@ -252,7 +263,7 @@ export const init = new Command()
         description: "A customizable calendar component using Day.js",
         packageManager: projectInfo.packageManager,
         isSrcDir: projectInfo.isSrcDir,
-        isTsx: languageFolder,
+        isTsx: isTsx,
         isNext: projectInfo.isNext,
         isUsingAppDir: projectInfo.isUsingAppDir,
         styleType: styleChoice,
