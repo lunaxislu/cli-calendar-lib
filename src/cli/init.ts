@@ -58,7 +58,7 @@ export const init = new Command()
       const isTailwindInstalled =
         "tailwindcss" in projectDependencies ||
         "tailwindcss" in projectDevDependencies;
-      if (styleChoice === "tailwind") {
+      if (styleChoice === "Tailwind") {
         logger.info("Checking Tailwind installation...");
 
         if (isTailwindInstalled) {
@@ -96,6 +96,23 @@ export const init = new Command()
           logger.success("Tailwind configuration created.");
         } else {
           logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
+        }
+
+        // Tailwind-merge 설치 확인
+        const isTailwindMergeInstalled =
+          "tailwind-merge" in projectDependencies ||
+          "tailwind-merge" in projectDevDependencies;
+
+        if (!isTailwindMergeInstalled) {
+          logger.info("Installing tailwind-merge...");
+          await execa(
+            packageManager,
+            [packageManager === "npm" ? "install" : "add", "tailwind-merge"],
+            { cwd, stdio: "inherit" },
+          );
+          logger.success("tailwind-merge installed successfully.");
+        } else {
+          logger.success("tailwind-merge is already installed.");
         }
       }
 
@@ -155,7 +172,41 @@ export const init = new Command()
         }
       }
 
-      // 5. component.json 파일 생성 또는 덮어쓰기 여부 확인
+      // clsx와 class-variance-authority 설치 여부 확인
+      const isClsxInstalled =
+        "clsx" in projectDependencies || "clsx" in projectDevDependencies;
+      const isCvaInstalled =
+        "class-variance-authority" in projectDependencies ||
+        "class-variance-authority" in projectDevDependencies;
+
+      if (!isClsxInstalled) {
+        logger.info("Installing clsx...");
+        await execa(
+          packageManager,
+          [packageManager === "npm" ? "install" : "add", "clsx"],
+          { cwd, stdio: "inherit" },
+        );
+        logger.success("clsx installed successfully.");
+      } else {
+        logger.success("clsx is already installed.");
+      }
+
+      if (!isCvaInstalled) {
+        logger.info("Installing class-variance-authority...");
+        await execa(
+          packageManager,
+          [
+            packageManager === "npm" ? "install" : "add",
+            "class-variance-authority",
+          ],
+          { cwd, stdio: "inherit" },
+        );
+        logger.success("class-variance-authority installed successfully.");
+      } else {
+        logger.success("class-variance-authority is already installed.");
+      }
+
+      // 7. module.json 파일 생성 또는 덮어쓰기 여부 확인
       const moduleJsonPath = path.resolve(cwd, "module.json");
 
       const fileExists = await fs
@@ -177,7 +228,7 @@ export const init = new Command()
       }
 
       if (!overwrite) {
-        logger.info("component.json file was not overwritten.");
+        logger.info("module.json file was not overwritten.");
         return logger.info("Execution terminated.");
       }
 
@@ -213,7 +264,7 @@ export const init = new Command()
         JSON.stringify(moduleJson, null, 2),
         "utf8",
       );
-      logger.success(`component.json has been created at ${moduleJsonPath}`);
+      logger.success(`module.json has been created at ${moduleJsonPath}`);
     } catch (error) {
       spinner.fail("Failed to initialize the project");
       logger.error("Failed to initialize the project");

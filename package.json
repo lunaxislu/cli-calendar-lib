@@ -1,6 +1,6 @@
 {
   "name": "cli-custom-calendar",
-  "version": "0.2.2",
+  "version": "0.2.6",
   "description": "",
   "main": "./dist/index.mjs",
   "type": "module",
@@ -10,11 +10,18 @@
   "scripts": {
     "build": "tsup"
   },
-  "keywords": [],
+  "keywords": [
+    "cli",
+    "calendar",
+    "custom",
+    "custom-calendar",
+    "shadCn"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@antfu/ni": "^0.23.0",
+    "adm-zip": "^0.5.16",
     "commander": "^12.1.0",
     "execa": "^9.3.1",
     "fast-glob": "^3.3.2",
@@ -25,10 +32,10 @@
     "ora": "^8.1.0",
     "prompts": "^2.4.2",
     "tsconfig-paths": "^4.2.0",
-    "type-fest": "^4.26.0",
-    "unzipper": "^0.12.3"
+    "type-fest": "^4.26.0"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.5.4",
     "@types/prompts": "^2.4.9",
