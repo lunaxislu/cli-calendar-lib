@@ -1,0 +1,81 @@
+/*
+@explain grid
+size type : small
+*/
+.sm-calendar-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: inline-flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10.5px;
+  border-radius: 5px;
+  border: 1px solid #ededed;
+  background: #fff;
+}
+
+.sm-size-header-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+/*
+@explain grid
+size type : large
+*/
+.lg-calendar-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: flex;
+  max-width: 1520px;
+  margin: 0 auto;
+  width: 100%;
+  align-items: flex-start;
+  gap: clamp(2%, 40px, 40px);
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-bottom: 50px;
+}
+
+.lg-size-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 78%;
+  max-width: 1260px;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #ededed;
+}

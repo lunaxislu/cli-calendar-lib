@@ -1,0 +1,64 @@
+/*
+-----------grid styles
+*/
+
+.base-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: flex;
+  width: 100%;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+  margin-bottom: 8px;
+  padding-bottom: 2px;
+}
+
+/*small size 일 때*/
+.sm-grid {
+  position: relative;
+  justify-content: center;
+}
+
+/*large 일 때*/
+.lg-grid {
+  width: 160px;
+  gap: 20px;
+  flex-direction: column;
+  align-items: start;
+}
+
+/*
+--------All txt styles
+*/
+.base-ph {
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  color: var(--text1, #121416);
+  font-size: 14px;
+  font-style: normal;
+  align-items: baseline;
+  font-weight: bold;
+  line-height: 18px; /* 100% */
+  letter-spacing: -0.36px;
+}
+
+/*
+    "*-txt" 는 year의 style입니다. 
+*/
+.sm-txt {
+  line-height: 18px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.lg-txt {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 18px;
+}

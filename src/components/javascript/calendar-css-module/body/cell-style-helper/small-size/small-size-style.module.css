@@ -1,0 +1,102 @@
+.small-calendar-base-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: grid;
+  /* width: 30px; 
+  cell width style 
+  */
+  height: 44px;
+  gap: 5px;
+  grid-template-rows: repeat(2, auto);
+  justify-items: center;
+  place-content: center;
+  font-size: 14px;
+}
+
+.small-calendar-base span {
+  padding: 6px;
+}
+
+.current-calendar {
+  opacity: 1 !important;
+}
+
+.small-current-month {
+  opacity: 1;
+}
+
+.small-not-current-month {
+  opacity: 0.5;
+  background-color: var(--point-2);
+}
+
+.small-prev-date {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.small-current-date {
+  cursor: pointer;
+  opacity: 1;
+  display: grid;
+  place-items: center;
+}
+
+.small-current-date span {
+  border-radius: 50%;
+  background: rgba(255, 168, 0, 0.5);
+  color: #000;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.small-after-date {
+  opacity: 0.5 !important;
+  pointer-events: none;
+}
+
+.small-day-base {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+}
+
+.small-calendar-saturday {
+  color: blue;
+}
+
+.small-calendar-sunday {
+  color: red;
+}
+
+.small-calendar-day {
+  color: #000;
+}
+
+/* 
+
+@explain selected Cell style in Small Size Calendar
+
+.small-calendar-selected-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid #7433ff;
+  background-color: rgba(116, 51, 255, 0.1);
+  text-align: center;
+} */

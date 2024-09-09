@@ -1,0 +1,68 @@
+.calendar-base-btn {
+  /*reset btn css*/
+  all: unset;
+  /*------------*/
+
+  background-color: transparent;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  /*default Button size*/
+  width: 12px;
+}
+
+/*
+  ----------small size
+  */
+.sm-btn-right {
+  width: 22px;
+  right: 0;
+}
+
+.sm-btn-left {
+  width: 22px;
+  left: 0;
+}
+
+/*
+  ------------large size
+  */
+
+.lg-grid {
+  /*default grid*/
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  /*---------*/
+
+  display: flex;
+  gap: 10px;
+}
+
+.lg-calendar-btn {
+  position: static;
+  display: flex;
+  width: 55px;
+  height: 55px;
+  transform: translateY(0);
+  padding: 10px !important;
+  margin: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  border-radius: 8px;
+  background: var(--bg-g, #f7f7f7);
+}
+
+.lg-calendar-btn :hover {
+  opacity: 0.8;
+}
