@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import styles from "./days.module.css";
 import { CALENDAR_SIZE, DAYS } from "../const/const";
 import clsx from "clsx";
+import { CalendarSizeType } from "../types/Calendar";
 
 const rowClassName = {
   smRow: styles["sm-row-grid"],

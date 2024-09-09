@@ -4,6 +4,8 @@ import styles from "./headerGrid.module.css";
 import { CALENDAR_SIZE, MONTH_FORMAT, YEAR_FORMAT } from "../const/const";
 import HeaderController from "./HeaderController";
 import React, { useMemo } from "react";
+import { CalendarSizeType } from "../types/Calendar";
+
 const HeaderGrid = ({ size }: { size: CalendarSizeType }) => {
   const currentData = dayjs();
 

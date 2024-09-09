@@ -1,17 +1,12 @@
 import clsx from "clsx";
 import { CALENDAR_SIZE } from "./const/const";
-import { ComponentPropsWithoutRef, useMemo } from "react";
+import { useMemo } from "react";
 import HeaderGrid from "./headerController/HeaderGrid";
 import CalendarDays from "./days/CalendarDays";
 import CalendarBody from "./body/CalendarBody";
 import { twMerge } from "tailwind-merge";
 
-interface CalendarProps extends ComponentPropsWithoutRef<"div"> {
-  size?: CalendarSizeType;
-  mode?: CalendarModeType;
-  page?: CalendarPageType;
-}
-const Calendar = ({ size = CALENDAR_SIZE.SMALL }: CalendarProps) => {
+const Calendar = ({ size = CALENDAR_SIZE.SMALL }) => {
   const calendarGrid = useMemo(
     () =>
       clsx({

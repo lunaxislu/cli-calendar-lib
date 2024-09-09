@@ -3,6 +3,7 @@ import styles from "./headerController.module.css";
 import { CALENDAR_SIZE } from "../const/const";
 import { ArrowLeft, ArrowRight } from "../svg/CalendarSvgr";
 import React, { useMemo } from "react";
+import { CalendarSizeType } from "../types/Calendar";
 const HeaderController = ({ size }: { size: CalendarSizeType }) => {
   const conditionalModeClasses = useMemo(
     () => clsx(size === CALENDAR_SIZE.LARGE && styles["lg-grid"]),

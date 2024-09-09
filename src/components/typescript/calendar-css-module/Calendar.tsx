@@ -1,6 +1,11 @@
 import clsx from "clsx";
 import styles from "./calendar.module.css";
-
+import React from "react";
+import {
+  CalendarSizeType,
+  CalendarModeType,
+  CalendarPageType,
+} from "./types/Calendar";
 import { CALENDAR_SIZE } from "./const/const";
 import { ComponentPropsWithoutRef, useMemo } from "react";
 import HeaderGrid from "./headerController/HeaderGrid";

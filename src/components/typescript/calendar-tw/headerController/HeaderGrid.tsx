@@ -4,6 +4,7 @@ import { CALENDAR_SIZE, MONTH_FORMAT, YEAR_FORMAT } from "../const/const";
 import HeaderController from "./HeaderController";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { CalendarSizeType } from "../types/Calendar";
 
 const HeaderGrid = ({ size }: { size: CalendarSizeType }) => {
   const currentData = dayjs();

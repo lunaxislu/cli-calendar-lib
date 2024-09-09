@@ -1,4 +1,4 @@
-type CalendarPageType = "bigPage" | "MiniPage";
+export type CalendarPageType = "bigPage" | "MiniPage";
 
-type CalendarModeType = "MINI_MODE" | "BIG_MODE";
-type CalendarSizeType = "SMALL_SIZE" | "LARGE_SIZE";
+export type CalendarModeType = "MINI_MODE" | "BIG_MODE";
+export type CalendarSizeType = "SMALL_SIZE" | "LARGE_SIZE";

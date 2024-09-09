@@ -3,6 +3,11 @@ import React, { HTMLAttributes } from "react";
 import { FORMAT_BODY_DATE } from "../const/const";
 import Cell from "./cell/Cell";
 import styles from "./calendar-body.module.css";
+import {
+  CalendarModeType,
+  CalendarPageType,
+  CalendarSizeType,
+} from "../types/Calendar";
 interface CalendarBodyProps extends HTMLAttributes<"div"> {
   size: CalendarSizeType;
   mode?: CalendarModeType;
@@ -16,8 +21,8 @@ const CalendarBody = ({ size }: CalendarBodyProps) => {
   // The last week that the monthStart belongs to
   const endDay = currentDate.endOf("month").endOf("week");
 
-  const row = [];
-  let days = [];
+  const row: JSX.Element[] = [];
+  let days: JSX.Element[] = [];
   let day = startDay;
   while (day <= endDay) {
     for (let i = 0; i < 7; i++) {

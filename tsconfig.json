@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "ESNext",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -13,11 +14,12 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules"]
 }

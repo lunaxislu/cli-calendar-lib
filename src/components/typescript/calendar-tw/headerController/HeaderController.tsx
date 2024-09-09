@@ -3,6 +3,7 @@ import { CALENDAR_SIZE } from "../const/const";
 import { ArrowLeft, ArrowRight } from "../svg/CalendarSvgr";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { CalendarSizeType } from "../types/Calendar";
 const BASE_BTN_CLASSNAME =
   "bg-transparent absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center p-0 cursor-pointer w-[12px]";
 
