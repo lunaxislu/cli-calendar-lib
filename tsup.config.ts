@@ -16,6 +16,7 @@ export default defineConfig({
   format: ["esm"], // ESM 형식으로 번들
   sourcemap: true, // 소스맵 생성
   minify: true, // 코드 최소화
+  outExtension: ({ format }) => ({ js: format === "esm" ? ".mjs" : ".cjs" }),
   target: "esnext", // 최신 ESNext로 타겟 설정
   outDir: "dist", // 번들된 파일이 저장될 디렉토리
   tsconfig: "./tsconfig.json", // TypeScript 설정 파일 지정

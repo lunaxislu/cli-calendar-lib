@@ -58,7 +58,7 @@ export const init = new Command()
       const isTailwindInstalled =
         "tailwindcss" in projectDependencies ||
         "tailwindcss" in projectDevDependencies;
-      if (styleChoice === "Tailwind") {
+      if (styleChoice === "tailwind") {
         logger.info("Checking Tailwind installation...");
 
         if (isTailwindInstalled) {
@@ -77,7 +77,7 @@ export const init = new Command()
             ],
             { cwd, stdio: "inherit" },
           );
-          logger.success("Tailwind installed successfully.");
+          logger.success("tailwind installed successfully.");
         }
         // Tailwind config 파일 확인 (확장자별로 확인)
         const tailwindConfigPath = await getTailwindConfigPath(cwd);
@@ -170,7 +170,7 @@ export const init = new Command()
           type: "confirm",
           name: "overwrite",
           message: "module.json already exists. Do you want to overwrite it?",
-          default: false, // 기본값을 false로 설정
+          default: true,
         });
 
         overwrite = response.overwrite;
@@ -201,7 +201,7 @@ export const init = new Command()
         description: "A customizable calendar component using Day.js",
         packageManager: projectInfo.packageManager,
         isSrcDir: projectInfo.isSrcDir,
-        isTsx: projectInfo.isTsx,
+        isTsx: languageFolder,
         isNext: projectInfo.isNext,
         isUsingAppDir: projectInfo.isUsingAppDir,
         styleType: styleChoice,

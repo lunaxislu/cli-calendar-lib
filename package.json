@@ -1,14 +1,14 @@
 {
-  "name": "cli-calendar",
-  "version": "1.0.0",
+  "name": "cli-custom-calendar",
+  "version": "0.2.2",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.mjs",
   "type": "module",
   "bin": {
     "cli-calendar": "./dist/index.mjs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
@@ -21,15 +21,18 @@
     "fs-extra": "^11.2.0",
     "inquirer": "^10.2.2",
     "kleur": "^4.1.5",
+    "node-fetch": "^3.3.2",
     "ora": "^8.1.0",
     "prompts": "^2.4.2",
     "tsconfig-paths": "^4.2.0",
-    "type-fest": "^4.26.0"
+    "type-fest": "^4.26.0",
+    "unzipper": "^0.12.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.5.4",
     "@types/prompts": "^2.4.9",
+    "@types/unzipper": "^0.10.10",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
