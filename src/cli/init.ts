@@ -1,9 +1,7 @@
-// src/commands/init.ts
 import { promises as fs } from "fs";
 import path from "path";
 import { Command } from "commander";
 import { execa } from "execa";
-import prompts from "prompts";
 import { loading } from "../util/loading";
 import {
   getProjectInfo,
@@ -64,8 +62,10 @@ export const init = new Command()
         if (isTailwindInstalled) {
           logger.success("Tailwind is already installed.");
         } else {
-          logger.info("Tailwind is not installed. Installing Tailwind...");
-
+          // Tailwind 설치 로딩 스피너 추가
+          const tailwindSpinner = loading(
+            "Tailwind is not installed. Installing Tailwind...",
+          ).start();
           // Tailwind 설치 및 설정
           await execa(
             packageManager,
@@ -77,13 +77,16 @@ export const init = new Command()
             ],
             { cwd, stdio: "inherit" },
           );
-          logger.success("tailwind installed successfully.");
+          tailwindSpinner.succeed("Tailwind installed successfully.");
         }
         // Tailwind config 파일 확인 (확장자별로 확인)
         const tailwindConfigPath = await getTailwindConfigPath(cwd);
         if (!tailwindConfigPath) {
           logger.info("No tailwind.config file found. Creating one...");
-
+          // Tailwind config 생성 로딩 스피너 추가
+          const tailwindConfigSpinner = loading(
+            "Creating Tailwind config...",
+          ).start();
           // Tailwind config 생성 (패키지 매니저에 맞춰 실행)
           if (packageManager === "npm") {
             await execa("npx", ["tailwindcss", "init", "-p"], {
@@ -104,7 +107,7 @@ export const init = new Command()
             });
           }
 
-          logger.success("Tailwind configuration created.");
+          tailwindConfigSpinner.succeed("Tailwind configuration created.");
         } else {
           logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
         }
@@ -115,13 +118,17 @@ export const init = new Command()
           "tailwind-merge" in projectDevDependencies;
 
         if (!isTailwindMergeInstalled) {
-          logger.info("Installing tailwind-merge...");
+          const tailwindMergeSpinner = loading(
+            "Installing tailwind-merge...",
+          ).start();
           await execa(
             packageManager,
             [packageManager === "npm" ? "install" : "add", "tailwind-merge"],
             { cwd, stdio: "inherit" },
           );
-          logger.success("tailwind-merge installed successfully.");
+          tailwindMergeSpinner.succeed(
+            "tailwind-merge installed successfully.",
+          );
         } else {
           logger.success("tailwind-merge is already installed.");
         }
@@ -133,6 +140,8 @@ export const init = new Command()
       if (!currentDayjsVersion) {
         // Day.js가 없으면 설치
         logger.info("Day.js is not installed. Installing...");
+
+        const dayjsSpinner = loading("Installing Day.js...").start();
         await execa(
           packageManager,
           [
@@ -141,12 +150,13 @@ export const init = new Command()
           ],
           { cwd, stdio: "inherit" },
         );
-        logger.success(`Day.js@${REQUIRED_DAYJS_VERSION} installed.`);
+        dayjsSpinner.succeed(`Day.js@${REQUIRED_DAYJS_VERSION} installed.`);
       } else if (currentDayjsVersion < REQUIRED_DAYJS_VERSION) {
         // Day.js가 설치되어 있지만 버전이 낮으면 업데이트
         logger.info(
           `Day.js version is lower than required. Updating to ${REQUIRED_DAYJS_VERSION}...`,
         );
+        const dayjsUpdateSpinner = loading("Updating Day.js...").start();
         await execa(
           packageManager,
           [
@@ -155,7 +165,9 @@ export const init = new Command()
           ],
           { cwd, stdio: "inherit" },
         );
-        logger.success(`Day.js updated to ${REQUIRED_DAYJS_VERSION}.`);
+        dayjsUpdateSpinner.succeed(
+          `Day.js updated to ${REQUIRED_DAYJS_VERSION}.`,
+        );
       } else {
         logger.success("Day.js is up to date.");
       }
@@ -167,7 +179,9 @@ export const init = new Command()
           devDependencies["@types/css-modules"];
 
         if (!isCssModulesTypesInstalled) {
-          logger.info("Installing @types/css-modules for CSS Modules...");
+          const cssModulesSpinner = loading(
+            "Installing @types/css-modules...",
+          ).start();
           await execa(
             packageManager,
             [
@@ -177,7 +191,7 @@ export const init = new Command()
             ],
             { cwd, stdio: "inherit" },
           );
-          logger.success("@types/css-modules installed.");
+          cssModulesSpinner.succeed("@types/css-modules installed.");
         } else {
           logger.success("@types/css-modules is already installed.");
         }
@@ -191,19 +205,21 @@ export const init = new Command()
         "class-variance-authority" in projectDevDependencies;
 
       if (!isClsxInstalled) {
-        logger.info("Installing clsx...");
+        const clsxSpinner = loading("Installing clsx...").start();
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", "clsx"],
           { cwd, stdio: "inherit" },
         );
-        logger.success("clsx installed successfully.");
+        clsxSpinner.succeed("clsx installed successfully.");
       } else {
         logger.success("clsx is already installed.");
       }
 
       if (!isCvaInstalled) {
-        logger.info("Installing class-variance-authority...");
+        const cvaSpinner = loading(
+          "Installing class-variance-authority...",
+        ).start();
         await execa(
           packageManager,
           [
@@ -212,7 +228,7 @@ export const init = new Command()
           ],
           { cwd, stdio: "inherit" },
         );
-        logger.success("class-variance-authority installed successfully.");
+        cvaSpinner.succeed("class-variance-authority installed successfully.");
       } else {
         logger.success("class-variance-authority is already installed.");
       }

@@ -15,10 +15,32 @@
     "calendar",
     "custom",
     "custom-calendar",
-    "shadCn"
+    "shadCN",
+    "typescript",
+    "javascript",
+    "react",
+    "tailwind",
+    "dayjs"
   ],
+  "contributors": [
+    {
+      "name": "Choi Mun Kil",
+      "email": "mimk0905@gmail.com"
+    }
+  ],
+  "homepage": "https://github.com/lunaxislu/cli-calendar-lib#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lunaxislu/cli-calendar-lib.git"
+  },
   "bugs": {
-    "url": "https://github.com/lunaxislu/cli-calendar-lib/issues"
+    "url": "https://github.com/lunaxislu/cli-calendar-lib/issues",
+    "email": "mimk0905@gamil.com"
   },
   "author": "Choi Mun Kil",
   "license": "MIT",

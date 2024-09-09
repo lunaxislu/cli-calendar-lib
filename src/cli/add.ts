@@ -1,4 +1,3 @@
-// src/commands/add.ts
 import fs from "fs-extra";
 import path from "path";
 import fetch from "node-fetch";
