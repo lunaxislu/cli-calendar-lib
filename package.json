@@ -1,6 +1,6 @@
 {
   "name": "cli-custom-calendar",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "CLI tool to set up and manage a customizable calendar component. Supports both CSS Modules and Tailwind for styling, and automatically configures the project based on JavaScript or TypeScript environments. It also installs and sets up essential dependencies like Day.js, Tailwind, clsx, and class-variance-authority.",
   "main": "./dist/index.mjs",
   "type": "module",
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.5",
+    "@types/commander": "^2.12.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.5.4",
     "@types/prompts": "^2.4.9",

@@ -182,16 +182,21 @@ export const init = new Command()
           const cssModulesSpinner = loading(
             "Installing @types/css-modules...",
           ).start();
-          await execa(
-            packageManager,
-            [
-              packageManager === "npm" ? "install" : "add",
-              "--save-dev",
-              "@types/css-modules",
-            ],
-            { cwd, stdio: "inherit" },
-          );
-          cssModulesSpinner.succeed("@types/css-modules installed.");
+          try {
+            const installCommand =
+              packageManager === "npm"
+                ? ["install", "--save-dev", "@types/css-modules"]
+                : ["add", "-D", "@types/css-modules"]; // yarn, pnpm 공통 처리
+
+            await execa(packageManager, installCommand, {
+              cwd,
+              stdio: "inherit",
+            });
+            cssModulesSpinner.succeed("@types/css-modules installed.");
+          } catch (err) {
+            cssModulesSpinner.fail("Failed to install @types/css-modules.");
+            throw err;
+          }
         } else {
           logger.success("@types/css-modules is already installed.");
         }
