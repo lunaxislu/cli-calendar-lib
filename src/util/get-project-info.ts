@@ -185,20 +185,32 @@ export async function updateWithTsmorphToTailwindConfig(
 }
 // @tailwind base 추가 작업 유틸리티
 export async function addTailwindBaseToCss(filePaths: string[]) {
-  // 패턴에 맞는 global.css 또는 index.css를 우선적으로 찾음
   const globalCssPath = filePaths.find((file) => file.includes("global.css"));
   const indexCssPath = filePaths.find((file) => file.includes("index.css"));
 
   // global.css가 있으면 해당 파일에 추가, 없으면 index.css에 추가
-  const fileToAddBase = globalCssPath || indexCssPath || filePaths[0];
-  const cssContent = await fs.readFile(fileToAddBase, "utf8");
+  const fileToAddDirectives = globalCssPath || indexCssPath || filePaths[0];
+  const cssContent = await fs.readFile(fileToAddDirectives, "utf8");
 
-  // 파일에 '@tailwind base'가 없을 경우 추가
-  if (!cssContent.includes("@tailwind base")) {
-    const updatedContent = `@tailwind base;\n${cssContent}`;
-    await fs.writeFile(fileToAddBase, updatedContent, "utf8");
-    console.log(`Added '@tailwind base' to ${fileToAddBase}`);
-  }
+  // 추가할 Tailwind directives
+  const tailwindDirectives = [
+    "@tailwind base;",
+    "@tailwind components;",
+    "@tailwind utilities;",
+  ];
+
+  let updatedContent = cssContent;
+
+  // 각 directive가 있는지 확인하고 없으면 추가
+  tailwindDirectives.forEach((directive) => {
+    if (!updatedContent.includes(directive)) {
+      updatedContent = `${directive}\n${updatedContent}`;
+    }
+  });
+
+  // 파일에 추가된 내용을 저장
+  await fs.writeFile(fileToAddDirectives, updatedContent, "utf8");
+  console.log(`Added Tailwind directives to ${fileToAddDirectives}`);
 }
 export async function getTailwindCssFile(cwd: string) {
   const files = await fg.glob("**/*.css", {
