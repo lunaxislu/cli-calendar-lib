@@ -132,7 +132,7 @@ export async function updateWithTsmorphToTailwindConfig(
   filePath: string | null,
   content: string[]
 ) {
-  if (!filePath) return logger.error("not find filepath");
+  if (!filePath) return logger.error("File path not found");
 
   const project = new Project();
 

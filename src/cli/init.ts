@@ -116,13 +116,22 @@ export const init = new Command()
 
         logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
 
-        const contentPath = projectInfo.isSrcDir
-          ? "src/module/**/*.{js,ts,jsx,tsx}"
-          : "./module/**/*.{js,ts,jsx,tsx}";
+        const contentPaths = [
+          "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+          "./components/**/*.{js,ts,jsx,tsx,mdx}",
+          "./app/**/*.{js,ts,jsx,tsx,mdx}",
+        ];
 
-        await updateWithTsmorphToTailwindConfig(tailwindConfigPath, [
-          contentPath,
-        ]);
+        // isSrcDir 값에 따라 src 경로 또는 기본 경로 추가
+        if (projectInfo.isSrcDir) {
+          contentPaths.push("./src/components/**/*.{js,ts,jsx,tsx,mdx}");
+        }
+
+        // Tailwind 설정 파일을 업데이트하는 함수 호출
+        await updateWithTsmorphToTailwindConfig(
+          tailwindConfigPath,
+          contentPaths
+        );
         logger.success("Checked/Updated Tailwind config content.");
 
         //---------------
