@@ -4,8 +4,11 @@ import { Command } from "commander";
 import { execa } from "execa";
 import { loading } from "../util/loading";
 import {
+  addTailwindBaseToCss,
   getProjectInfo,
   getTailwindConfigPath,
+  getTailwindCssFile,
+  updateWithTsmorphToTailwindConfig,
 } from "../util/get-project-info";
 import { logger } from "../util/logger";
 import { getPackageInfo, readPackageJson } from "../util/get-package-info";
@@ -61,12 +64,13 @@ export const init = new Command()
 
         if (isTailwindInstalled) {
           logger.success("Tailwind is already installed.");
-        } else {
-          // Tailwind 설치 로딩 스피너 추가
+        }
+
+        if (!isTailwindInstalled) {
           const tailwindSpinner = loading(
             "Tailwind is not installed. Installing Tailwind..."
           ).start();
-          // Tailwind 설치 및 설정
+
           await execa(
             packageManager,
             [
@@ -79,15 +83,15 @@ export const init = new Command()
           );
           tailwindSpinner.succeed("Tailwind installed successfully.");
         }
+
         // Tailwind config 파일 확인 (확장자별로 확인)
-        const tailwindConfigPath = await getTailwindConfigPath(cwd);
+        let tailwindConfigPath = await getTailwindConfigPath(cwd);
         if (!tailwindConfigPath) {
           logger.info("No tailwind.config file found. Creating one...");
-          // Tailwind config 생성 로딩 스피너 추가
           const tailwindConfigSpinner = loading(
             "Creating Tailwind config..."
           ).start();
-          // Tailwind config 생성 (패키지 매니저에 맞춰 실행)
+
           if (packageManager === "npm") {
             await execa("npx", ["tailwindcss", "init", "-p"], {
               cwd,
@@ -106,11 +110,22 @@ export const init = new Command()
               stdio: "inherit",
             });
           }
-
           tailwindConfigSpinner.succeed("Tailwind configuration created.");
-        } else {
-          logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
+          tailwindConfigPath = await getTailwindConfigPath(cwd);
         }
+
+        logger.success(`Found Tailwind configuration: ${tailwindConfigPath}`);
+
+        const contentPath = projectInfo.isSrcDir
+          ? "src/module/**/*.{js,ts,jsx,tsx}"
+          : "./module/**/*.{js,ts,jsx,tsx}";
+
+        await updateWithTsmorphToTailwindConfig(tailwindConfigPath, [
+          contentPath,
+        ]);
+        logger.success("Checked/Updated Tailwind config content.");
+
+        //---------------
 
         // Tailwind-merge 설치 확인
         const isTailwindMergeInstalled =
@@ -131,6 +146,13 @@ export const init = new Command()
           );
         } else {
           logger.success("tailwind-merge is already installed.");
+        }
+        // index.css 또는 global.css 파일에 @tailwind base 추가 확인
+        const cssFilePath = await getTailwindCssFile(cwd);
+        if (cssFilePath) {
+          await addTailwindBaseToCss(cssFilePath);
+        } else {
+          logger.info("No index.css or global.css found. Skipping...");
         }
       }
 
