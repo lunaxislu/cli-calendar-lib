@@ -3,7 +3,16 @@ import { loadConfig } from "tsconfig-paths";
 import fs from "fs-extra";
 import fg from "fast-glob";
 import { getPackageManager } from "./get-package-manager";
-
+import { Framework, FRAMEWORKS } from "./frameworks";
+import { JsonValue } from "type-fest";
+export type ProjectType = {
+  framework: Framework;
+  isUsingAppDir: boolean;
+  isSrcDir: boolean;
+  isTsx: boolean;
+  configFiles: string[];
+  packageManager: "yarn" | "pnpm" | "bun" | "npm";
+};
 const PROJECT_SHARED_IGNORE = [
   "**/node_modules/**",
   ".next",
@@ -44,22 +53,29 @@ export async function getProjectInfo(cwd: string) {
   ]);
 
   const isNext = configFiles.length > 0;
-
-  let isUsingAppDir = false;
+  const projectType: ProjectType = {
+    framework: FRAMEWORKS["react.js"],
+    isUsingAppDir: false,
+    isSrcDir,
+    isTsx,
+    configFiles,
+    packageManager,
+  };
 
   if (isNext) {
-    isUsingAppDir = await fs.pathExists(
-      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`),
+    projectType.isUsingAppDir = await fs.pathExists(
+      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
     );
+    projectType.framework = projectType.isUsingAppDir
+      ? FRAMEWORKS["next-app"]
+      : FRAMEWORKS["next-pages"];
   }
-
-  return {
-    packageManager,
-    isSrcDir, // src 디렉터리 존재 여부
-    isTsx, // TypeScript 프로젝트 여부
-    isNext, // Next.js 프로젝트 여부
-    isUsingAppDir, // nextjs appRouter에서 'src/app' | '/app'
+  const resolveConfig = {
+    ...projectType,
+    ...projectType.framework,
   };
+
+  return resolveConfig;
 }
 export async function isTypeScriptProject(cwd: string) {
   // vite는 tsconfig가 3개임
