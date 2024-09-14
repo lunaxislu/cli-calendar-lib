@@ -4,7 +4,6 @@ import fs from "fs-extra";
 import fg from "fast-glob";
 import { getPackageManager } from "./get-package-manager";
 import { Framework, FRAMEWORKS } from "./frameworks";
-import { JsonValue } from "type-fest";
 import { ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import { logger } from "./logger";
 export type ProjectType = {
@@ -66,7 +65,7 @@ export async function getProjectInfo(cwd: string) {
 
   if (isNext) {
     projectType.isUsingAppDir = await fs.pathExists(
-      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
+      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`),
     );
     projectType.framework = projectType.isUsingAppDir
       ? FRAMEWORKS["next-app"]
@@ -130,7 +129,7 @@ export function _getQuoteChar(configObject: ObjectLiteralExpression): string {
 // Tailwind 설정 파일 수정
 export async function updateWithTsmorphToTailwindConfig(
   filePath: string | null,
-  content: string[]
+  content: string[],
 ) {
   if (!filePath) return logger.error("File path not found");
 
@@ -148,8 +147,8 @@ export async function updateWithTsmorphToTailwindConfig(
         .some(
           (property) =>
             property.isKind(SyntaxKind.PropertyAssignment) &&
-            property.getName() === "content"
-        )
+            property.getName() === "content",
+        ),
     );
 
   if (!configObject) {

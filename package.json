@@ -1,11 +1,14 @@
 {
   "name": "cli-custom-calendar",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "CLI tool to set up and manage a customizable calendar component. Supports both CSS Modules and Tailwind for styling, and automatically configures the project based on JavaScript or TypeScript environments. It also installs and sets up essential dependencies like Day.js, Tailwind, clsx, and class-variance-authority.",
-  "main": "./dist/index.mjs",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": "./dist/index.js",
   "bin": {
-    "cli-calendar": "./dist/index.mjs"
+    "cli-calendar": "./dist/index.js"
   },
   "scripts": {
     "build": "tsup"
@@ -29,11 +32,6 @@
     }
   ],
   "homepage": "https://github.com/lunaxislu/cli-calendar-lib#readme",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lunaxislu/cli-calendar-lib.git"
