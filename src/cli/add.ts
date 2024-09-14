@@ -8,19 +8,6 @@ import { logger } from "../util/logger";
 import { loading } from "../util/loading";
 import fg from "fast-glob";
 
-export async function getTailwindConfigPath(cwd: string) {
-  const configFiles = await fg(["tailwind.config.*"], {
-    cwd,
-    deep: 1,
-  });
-
-  if (configFiles.length > 0) {
-    return path.resolve(cwd, configFiles[0]);
-  }
-
-  return null;
-}
-
 export const add = new Command()
   .name("add")
   .description("Add components based on the module.json pathResolve")
@@ -92,12 +79,12 @@ export const add = new Command()
       // 중복된 폴더가 있을 경우 처리
       const extractedFolders = await fs.readdir(extractPath);
       const extractedMainFolder = extractedFolders.find((folder) =>
-        folder.includes("cli-calendar-lib-main"),
+        folder.includes("cli-calendar-lib-main")
       );
 
       if (!extractedMainFolder) {
         throw new Error(
-          "Extracted folder not found. Please check the downloaded content.",
+          "Extracted folder not found. Please check the downloaded content."
         );
       }
 
@@ -105,7 +92,7 @@ export const add = new Command()
       const finalExtractPath = path.join(
         extractPath,
         extractedMainFolder,
-        "src",
+        "src"
       );
 
       // 디버깅: 압축 해제된 경로 내 폴더 출력
@@ -122,13 +109,13 @@ export const add = new Command()
       // calendarSourcePath 동적 설정
       const calendarSourcePath = path.join(
         finalExtractPath,
-        `components/${languageFolder}/${styleFolder}`,
+        `components/${languageFolder}/${styleFolder}`
       );
 
       // 폴더 존재 여부 확인
       if (!(await fs.pathExists(calendarSourcePath))) {
         throw new Error(
-          `The path ${calendarSourcePath} does not exist. Please check the extracted content.`,
+          `The path ${calendarSourcePath} does not exist. Please check the extracted content.`
         );
       }
 
