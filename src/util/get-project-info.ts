@@ -216,30 +216,29 @@ export async function getTailwindCssFile(cwd: string) {
   const files = await fg.glob("**/*.css", {
     cwd,
     deep: 5,
-    ignore: PROJECT_SHARED_IGNORE,
+    ignore: ["**/node_modules/**", ".next", "public", "dist", "build"],
   });
 
   if (!files.length) {
-    throw Error("not Find Css FILE");
+    throw new Error("No CSS files found.");
   }
 
   const tailwindBaseCssFiles: string[] = [];
-  /**
-   * @explain
-   * index.css , global.css, app.css 에 @tailwindBase붙여도 무관
-   * tailwind.config.* content 설정 해줘야지 굴러감
-   */
+
   for (const file of files) {
     const contents = await fs.readFile(path.resolve(cwd, file), "utf8");
+
+    // @tailwind base가 있는 파일을 필터링하여 저장
     if (contents.includes("@tailwind base")) {
       tailwindBaseCssFiles.push(file);
     }
   }
+
+  // @tailwind base가 있는 파일이 없을 경우, 첫 번째 CSS 파일에 추가
   if (tailwindBaseCssFiles.length === 0) {
-    if (files.length > 0) {
-      await addTailwindBaseToCss(files); // 업으면 추가해주기
-      tailwindBaseCssFiles.push(...files);
-    }
+    await addTailwindBaseToCss(files); // 추가 작업을 진행
+    return files; // 추가한 파일을 반환
   }
-  return null;
+
+  return tailwindBaseCssFiles; // 이미 @tailwind base가 있는 파일을 반환
 }

@@ -55,11 +55,11 @@ export const init = new Command()
 
       logger.info(`You chose: ${styleChoice}`);
 
-      // 4. Tailwind 설치 여부 확인
-      const isTailwindInstalled =
-        "tailwindcss" in projectDependencies ||
-        "tailwindcss" in projectDevDependencies;
       if (styleChoice === "Tailwind") {
+        // 4. Tailwind 설치 여부 확인
+        const isTailwindInstalled =
+          "tailwindcss" in projectDependencies ||
+          "tailwindcss" in projectDevDependencies;
         logger.info("Checking Tailwind installation...");
 
         if (isTailwindInstalled) {
@@ -148,9 +148,10 @@ export const init = new Command()
           logger.success("tailwind-merge is already installed.");
         }
         // index.css 또는 global.css 파일에 @tailwind base 추가 확인
-        const cssFilePath = await getTailwindCssFile(cwd);
-        if (cssFilePath) {
-          await addTailwindBaseToCss(cssFilePath);
+        const cssFilePaths = await getTailwindCssFile(cwd);
+
+        if (cssFilePaths) {
+          await addTailwindBaseToCss(cssFilePaths);
         } else {
           logger.info("No index.css or global.css found. Skipping...");
         }
