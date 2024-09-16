@@ -42,17 +42,22 @@ export const add = new Command()
         const updateEslintSpinner = loading(
           "Updating Your Eslint File...",
         ).start();
-        // react
-        if (type === "react") {
-          await updateReactJSEslint(eslintConfig);
 
-          updateEslintSpinner.succeed(`Update your Eslint File of React-js `);
-        }
+        try {
+          // react
+          if (type === "react") {
+            await updateReactJSEslint(eslintConfig);
 
-        // nextjs javascript
-        if (type !== "react") {
-          await updateNextJSEslint(eslintConfig);
-          updateEslintSpinner.succeed(`Update your Eslint File of Next-js `);
+            updateEslintSpinner.succeed(`Update your Eslint File of React-js `);
+          }
+
+          // nextjs javascript
+          if (type !== "react") {
+            await updateNextJSEslint(eslintConfig);
+            updateEslintSpinner.succeed(`Update your Eslint File of Next-js `);
+          }
+        } catch (err) {
+          console.log(highlighter.info(`${err}`));
         }
       }
 
@@ -165,7 +170,7 @@ export const add = new Command()
         );
 
         let fileContent = await fs.readFile(pathResolve, "utf-8");
-        fileContent = `"use client";\n\n${fileContent}`;
+        fileContent = `"use client";\n${fileContent}`;
 
         await fs.writeFile(pathResolve, fileContent, "utf-8");
         rscComponentSpinner.succeed("Complete Rsc Component");

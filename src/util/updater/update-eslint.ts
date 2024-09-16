@@ -81,7 +81,7 @@ export async function updateReactJSEslint(eslintConfig: Config) {
     return;
   } catch (err) {
     return console.log(
-      `${highlighter.error(
+      `${highlighter.info(
         "Something Wrong \n But That's Okay Just Edit Your Config of Eslint",
       )}`,
     );
@@ -173,7 +173,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
     }
   } catch (err) {
     return console.log(
-      `${highlighter.error(
+      `${highlighter.info(
         "Something Wrong \n But That's Okay Just Edit Your Config of Eslint",
       )}`,
     );
