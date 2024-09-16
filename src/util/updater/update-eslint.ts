@@ -30,79 +30,51 @@ export async function updateEslint(eslintConfig: Config) {
   }
 
   const project = new Project();
+  const sourceFile = project.addSourceFileAtPath(filepath);
 
-  if (Array.isArray(config)) {
-    const sourceFile = project.addSourceFileAtPath(filepath);
-    const arrayExpressions = sourceFile.getDescendantsOfKind(
-      SyntaxKind.ArrayLiteralExpression
-    );
+  const configWithRules = sourceFile
+    .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression) // 모든 객체 리터럴 표현식을 가져옴
+    .find((objectLiteral: ObjectLiteralExpression) => {
+      const rulesProperty = objectLiteral.getProperty(`rules`);
+      return rulesProperty ? objectLiteral : undefined;
+    });
+  if (configWithRules) {
+    const rulesProperty = configWithRules.getProperty(
+      "rules",
+    ) as PropertyAssignment;
 
-    await updateArrayEslint(arrayExpressions);
+    const rulesObject =
+      rulesProperty.getInitializer() as ObjectLiteralExpression;
 
-    await sourceFile.save();
-    updaterSpinner.succeed("updated @lint");
-    return;
+    const quoteChar = getQuoteChar(rulesObject);
+    const targetEsLintProperty = rulesObject.getProperty(
+      `${quoteChar}react/prop-types${quoteChar}`,
+    ) as PropertyAssignment;
+
+    if (targetEsLintProperty) {
+      targetEsLintProperty.setInitializer(`${quoteChar}off${quoteChar}`);
+    }
+
+    if (!targetEsLintProperty) {
+      rulesObject.addPropertyAssignment({
+        name: `${quoteChar}react/prop-types${quoteChar}`,
+        initializer: `${quoteChar}off${quoteChar}`,
+      });
+    }
   }
 
-  const sourceFile = project.addSourceFileAtPath(filepath);
-  // object
-}
+  if (!configWithRules) {
+    const objectLiterals = sourceFile.getDescendantsOfKind(
+      SyntaxKind.ObjectLiteralExpression,
+    )[0];
 
-async function updateArrayEslint(arrayExpressions: ArrayLiteralExpression[]) {
-  // assumed empty file
-  if (arrayExpressions.length === 0) return;
-
-  let rulesPropertyFound = false;
-  arrayExpressions.forEach((arrayExpress) => {
-    const expressionArr = arrayExpress
-      .getElements()
-      .filter((el) => el.getKind() === SyntaxKind.ObjectLiteralExpression);
-
-    const objectLiterals = expressionArr as ObjectLiteralExpression[];
-    objectLiterals.forEach((objectLiteral) => {
-      if (objectLiteral) {
-        const rulesProperty = objectLiteral.getProperty(
-          "rules"
-        ) as PropertyAssignment;
-
-        if (rulesProperty) {
-          rulesPropertyFound = true;
-
-          const rulesInitializer = rulesProperty.getInitializer();
-          if (rulesInitializer) {
-            const rulesObject = rulesInitializer as ObjectLiteralExpression;
-
-            const quoteChar = getQuoteChar(rulesObject);
-            // "react/prop-types" 규칙이 있는지 확인
-            const targetLint = rulesObject.getProperty(
-              `${quoteChar}react/prop-types${quoteChar}`
-            );
-
-            if (!targetLint) {
-              rulesObject.addPropertyAssignment({
-                name: `${quoteChar}react/prop-types${quoteChar}`,
-                initializer: `${quoteChar}off${quoteChar}`,
-              });
-            }
-          }
-        }
-      }
+    const quoteChar = getQuoteChar(objectLiterals);
+    objectLiterals.addPropertyAssignment({
+      name: `${quoteChar}rules${quoteChar}`,
+      initializer: `{ ${quoteChar}react/prop-types${quoteChar}: ${quoteChar}off${quoteChar} }`,
     });
-
-    if (!rulesPropertyFound) {
-      const firstObjectLiteral = arrayExpress
-        .getElements()[0]
-        .asKind(SyntaxKind.ObjectLiteralExpression);
-
-      if (firstObjectLiteral) {
-        const quoteChar = getQuoteChar(firstObjectLiteral);
-
-        firstObjectLiteral.addPropertyAssignment({
-          name: `${quoteChar}rules${quoteChar}`,
-          initializer: `{ ${quoteChar}react/prop-types${quoteChar}: ${quoteChar}off${quoteChar} }`,
-        });
-      }
-    }
-  });
+  }
+  updaterSpinner.succeed("update Eslint");
+  await sourceFile.save();
   return;
 }
