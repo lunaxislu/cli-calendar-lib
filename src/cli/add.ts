@@ -7,11 +7,14 @@ import { Command } from "commander";
 import { logger } from "../util/logger";
 import { loading } from "../util/loading";
 import fg from "fast-glob";
-import { getModuleConfig } from "../util/config/get-module-config";
+import {
+  getEslintConfig,
+  getModuleConfig,
+} from "../util/config/get-project-config";
 import { ProjectType } from "../util/get-project-info";
 import { ModuleConfig } from "./init";
-import { getEslintConfig } from "../util/config/get-eslint-config";
-import { updateEslint } from "../util/updater/update-eslint";
+
+import { updateReactJSEslint } from "../util/updater/update-eslint";
 
 export const add = new Command()
   .name("add")
@@ -28,17 +31,19 @@ export const add = new Command()
       spinner.succeed("module.json read successfully.");
 
       if (!isTsx) {
+        // react
         if (type === "react") {
           const resolveEslintSpinner = loading("Detecting Eslint...").start();
           const eslintConfig = await getEslintConfig(moduleConfig);
           resolveEslintSpinner.succeed("Resolve Eslint");
           if (eslintConfig) {
-            await updateEslint(eslintConfig);
+            await updateReactJSEslint(eslintConfig);
           }
 
           resolveEslintSpinner.succeed(`Update your Eslint File of React-js `);
         }
 
+        // next
         if (type !== "react") {
         }
       }

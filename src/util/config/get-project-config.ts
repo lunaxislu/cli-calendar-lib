@@ -1,9 +1,18 @@
 import { cosmiconfig } from "cosmiconfig";
 import { logger } from "../logger";
 import { highlighter } from "../color";
+import { ModuleConfig } from "@/src/cli/init";
+import path from "path";
+
+export type Config = {
+  config: any;
+  fileExtension: string;
+  isEmpty: boolean | undefined;
+  filepath: string;
+};
+
 const DEFAULT_MODULE = "module.json";
 const explorerModule = cosmiconfig(DEFAULT_MODULE);
-// 탐색기를 설정해 ESLint 설정 파일을 찾음
 const explorerEslint = cosmiconfig("eslint", {
   searchPlaces: [
     ".eslintrc.json",
@@ -26,11 +35,35 @@ export async function getModuleConfig() {
       throw `Please Init. \n ${highlighter.error(`cli-calendar init`)}`;
     }
 
+    //@todo isEmpty일 때 처리
     const config = result.config;
 
     return config;
   } catch (err) {
     logger.error("not found module.json");
     throw new Error(`${err}`);
+  }
+}
+
+export async function getEslintConfig(
+  config: ModuleConfig,
+): Promise<Config | null> {
+  if (config.isTsx) return null;
+  try {
+    const result = await explorerEslint.search();
+    if (!result) return null;
+    const filepath = result.filepath;
+    const config = result.config;
+    const fileExtension = path.extname(filepath);
+    const isEmpty = result.isEmpty;
+    return {
+      config,
+      filepath,
+      isEmpty,
+      fileExtension,
+    };
+  } catch (err) {
+    logger.error("Cannot Resolve Eslint");
+    return null;
   }
 }

@@ -1,6 +1,6 @@
 import { CosmiconfigResult } from "cosmiconfig";
 import path from "path";
-import { Config } from "../config/get-eslint-config";
+
 import fs from "fs-extra";
 import { loading } from "../loading";
 import {
@@ -11,8 +11,9 @@ import {
   SyntaxKind,
 } from "ts-morph";
 import { getQuoteChar } from "../get-project-info";
+import { Config } from "../config/get-project-config";
 
-export async function updateEslint(eslintConfig: Config) {
+export async function updateReactJSEslint(eslintConfig: Config) {
   if (!eslintConfig || eslintConfig.isEmpty) {
     return; // @todo config 조건문 설정하기
   }
