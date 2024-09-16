@@ -27,23 +27,27 @@ export const add = new Command()
       // module.json 읽기
 
       const moduleConfig: ModuleConfig = await getModuleConfig();
-      const { isSrcDir, styleType, isTsx, type, name } = moduleConfig;
+      const { isSrcDir, styleType, isTsx, type } = moduleConfig;
       spinner.succeed("module.json read successfully.");
 
       if (!isTsx) {
+        const resolveEslintSpinner = loading("Detecting Eslint...").start();
+        const eslintConfig = await getEslintConfig(moduleConfig);
+        resolveEslintSpinner.succeed("Resolve Eslint");
+
+        if (!eslintConfig) return;
+
+        const updateEslintSpinner = loading(
+          "Updating Your Eslint File...",
+        ).start();
         // react
         if (type === "react") {
-          const resolveEslintSpinner = loading("Detecting Eslint...").start();
-          const eslintConfig = await getEslintConfig(moduleConfig);
-          resolveEslintSpinner.succeed("Resolve Eslint");
-          if (eslintConfig) {
-            await updateReactJSEslint(eslintConfig);
-          }
+          await updateReactJSEslint(eslintConfig);
 
-          resolveEslintSpinner.succeed(`Update your Eslint File of React-js `);
+          updateEslintSpinner.succeed(`Update your Eslint File of React-js `);
         }
 
-        // next
+        // nextjs javascript
         if (type !== "react") {
         }
       }
