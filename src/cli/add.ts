@@ -7,10 +7,7 @@ import { Command } from "commander";
 import { logger } from "../util/logger";
 import { loading } from "../util/loading";
 import fg from "fast-glob";
-import {
-  getEslintConfig,
-  getModuleConfig,
-} from "../util/config/get-project-config";
+import { getEslintConfig } from "../util/config/get-project-config";
 import { ProjectType } from "../util/get-project-info";
 import { ModuleConfig } from "./init";
 
@@ -30,13 +27,14 @@ export const add = new Command()
     try {
       // module.json 읽기
 
-      const moduleConfig: ModuleConfig = await getModuleConfig();
-      const { isSrcDir, styleType, isTsx, type } = moduleConfig;
+      const moduleJsonPath = path.resolve(cwd, "module.json");
+      const moduleJson = await fs.readJSON(moduleJsonPath);
+      const { isSrcDir, styleType, isTsx, type } = moduleJson;
       spinner.succeed("module.json read successfully.");
 
       if (!isTsx) {
         const resolveEslintSpinner = loading("Detecting Eslint...").start();
-        const eslintConfig = await getEslintConfig(moduleConfig);
+        const eslintConfig = await getEslintConfig(moduleJson);
         resolveEslintSpinner.succeed("Resolve Eslint");
 
         if (!eslintConfig) return;
@@ -135,7 +133,7 @@ export const add = new Command()
       logger.info(`Final extracted folder contents: ${contents.join(", ")}`);
 
       // isTsx 값에 따라 javascript 또는 typescript 선택
-      const languageFolder = moduleConfig.isTsx ? "typescript" : "javascript";
+      const languageFolder = moduleJson.isTsx ? "typescript" : "javascript";
 
       // styleType에 따라 calendar-css-module 또는 calendar-tw 선택
       const styleFolder =
@@ -157,7 +155,7 @@ export const add = new Command()
       }
 
       // RSC 처리
-      if (moduleConfig.isRsc) {
+      if (moduleJson.isRsc) {
         const rscComponentSpinner = loading("Manage RSC Component...").start();
         const pathResolve = path.resolve(
           finalExtractPath,

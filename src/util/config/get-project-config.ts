@@ -3,6 +3,7 @@ import { logger } from "../logger";
 import { highlighter } from "../color";
 import { ModuleConfig } from "@/src/cli/init";
 import path from "path";
+import fs from "fs-extra";
 
 export type Config = {
   config: any;
@@ -11,8 +12,6 @@ export type Config = {
   filepath: string;
 };
 
-const DEFAULT_MODULE = "module.json";
-const explorerModule = cosmiconfig(DEFAULT_MODULE);
 const explorerEslint = cosmiconfig("eslint", {
   searchPlaces: [
     ".eslintrc.json",
@@ -30,15 +29,14 @@ const explorerEslint = cosmiconfig("eslint", {
 
 export async function getModuleConfig() {
   try {
-    const result = await explorerModule.search();
+    const filepath = path.join(process.cwd(), "module.json");
+    const result = await fs.readFile(filepath, "utf-8");
     if (!result) {
       throw `Please Init. \n ${highlighter.error(`cli-calendar init`)}`;
     }
 
     //@todo isEmpty일 때 처리
-    const config = result.config;
-
-    return config;
+    return result;
   } catch (err) {
     logger.error("not found module.json");
     throw new Error(`${err}`);
