@@ -16,6 +16,18 @@ import inquirer from "inquirer";
 
 const REQUIRED_DAYJS_VERSION = "^1.10.4";
 
+export type ModuleConfig = {
+  name: string;
+  version: string;
+  description: string;
+  packageManager: "yarn" | "pnpm" | "bun" | "npm";
+  isSrcDir: boolean;
+  type: "app-router" | "pages-router" | "react";
+  isTsx: boolean;
+  isUsingAppDir: boolean;
+  styleType: any;
+  pathResolve: string;
+};
 export const init = new Command()
   .name("init")
   .description("Initialize your project and setup Calendar component")
@@ -317,6 +329,7 @@ export const init = new Command()
         description: "A customizable calendar component using Day.js",
         packageManager: projectInfo.packageManager,
         isSrcDir: projectInfo.isSrcDir,
+        type: projectInfo.name,
         isTsx: isTsx,
         isUsingAppDir: projectInfo.isUsingAppDir,
         styleType: styleChoice,

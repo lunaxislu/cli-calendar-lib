@@ -65,7 +65,7 @@ export async function getProjectInfo(cwd: string) {
 
   if (isNext) {
     projectType.isUsingAppDir = await fs.pathExists(
-      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`),
+      path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
     );
     projectType.framework = projectType.isUsingAppDir
       ? FRAMEWORKS["next-app"]
@@ -118,7 +118,7 @@ export async function getTailwindConfigPath(cwd: string) {
   return null;
 }
 // _getQuoteChar: 객체에서 사용하는 쿼트 형식을 확인하는 함수
-export function _getQuoteChar(configObject: ObjectLiteralExpression): string {
+export function getQuoteChar(configObject: ObjectLiteralExpression): string {
   return configObject
     .getFirstDescendantByKind(SyntaxKind.StringLiteral)
     ?.getQuoteKind() === "'"
@@ -129,7 +129,7 @@ export function _getQuoteChar(configObject: ObjectLiteralExpression): string {
 // Tailwind 설정 파일 수정
 export async function updateWithTsmorphToTailwindConfig(
   filePath: string | null,
-  content: string[],
+  content: string[]
 ) {
   if (!filePath) return logger.error("File path not found");
 
@@ -147,8 +147,8 @@ export async function updateWithTsmorphToTailwindConfig(
         .some(
           (property) =>
             property.isKind(SyntaxKind.PropertyAssignment) &&
-            property.getName() === "content",
-        ),
+            property.getName() === "content"
+        )
     );
 
   if (!configObject) {
@@ -156,7 +156,7 @@ export async function updateWithTsmorphToTailwindConfig(
   }
 
   // 현재 사용 중인 쿼트 형식 확인
-  const quoteChar = _getQuoteChar(configObject);
+  const quoteChar = getQuoteChar(configObject);
 
   // content 필드를 업데이트
   const existingContent = configObject.getProperty("content");
