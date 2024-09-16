@@ -18,6 +18,7 @@ import {
   updateNextJSEslint,
   updateReactJSEslint,
 } from "../util/updater/update-eslint";
+import { highlighter } from "../util/color";
 
 export const add = new Command()
   .name("add")
@@ -149,10 +150,28 @@ export const add = new Command()
       // 폴더 존재 여부 확인
       if (!(await fs.pathExists(calendarSourcePath))) {
         throw new Error(
-          `The path ${calendarSourcePath} does not exist. Please check the extracted content.`,
+          highlighter.error(
+            `The path ${calendarSourcePath} does not exist. Please callback cli-calendar add`,
+          ),
         );
       }
 
+      // RSC 처리
+      if (moduleConfig.isRsc) {
+        const rscComponentSpinner = loading("Manage RSC Component...").start();
+        const pathResolve = path.resolve(
+          finalExtractPath,
+          `components/${languageFolder}/${styleFolder}/Calendar.${
+            isTsx ? "tsx" : "jsx"
+          }`,
+        );
+
+        let fileContent = await fs.readFile(pathResolve, "utf-8");
+        fileContent = `"use client";\n\n${fileContent}`;
+
+        await fs.writeFile(pathResolve, fileContent, "utf-8");
+        rscComponentSpinner.succeed("Complete Rsc Component");
+      }
       // 필요한 경로로 복사
       await fs.copy(calendarSourcePath, modulePath);
       spinner.succeed(`Copied calendar files to ${modulePath}`);

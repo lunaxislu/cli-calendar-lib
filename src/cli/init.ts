@@ -27,6 +27,7 @@ export type ModuleConfig = {
   isUsingAppDir: boolean;
   styleType: any;
   pathResolve: string;
+  isRsc: boolean;
 };
 export const init = new Command()
   .name("init")
@@ -330,6 +331,7 @@ export const init = new Command()
         packageManager: projectInfo.packageManager,
         isSrcDir: projectInfo.isSrcDir,
         type: projectInfo.name,
+        isRsc: projectInfo.isRsc,
         isTsx: isTsx,
         isUsingAppDir: projectInfo.isUsingAppDir,
         styleType: styleChoice,
