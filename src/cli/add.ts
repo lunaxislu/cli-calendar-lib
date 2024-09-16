@@ -14,7 +14,10 @@ import {
 import { ProjectType } from "../util/get-project-info";
 import { ModuleConfig } from "./init";
 
-import { updateReactJSEslint } from "../util/updater/update-eslint";
+import {
+  updateNextJSEslint,
+  updateReactJSEslint,
+} from "../util/updater/update-eslint";
 
 export const add = new Command()
   .name("add")
@@ -49,6 +52,8 @@ export const add = new Command()
 
         // nextjs javascript
         if (type !== "react") {
+          await updateNextJSEslint(eslintConfig);
+          updateEslintSpinner.succeed(`Update your Eslint File of Next-js `);
         }
       }
 
