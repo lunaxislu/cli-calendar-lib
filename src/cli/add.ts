@@ -7,6 +7,10 @@ import { Command } from "commander";
 import { logger } from "../util/logger";
 import { loading } from "../util/loading";
 import fg from "fast-glob";
+import { getModuleConfig } from "../util/config/get-module-config";
+import { ProjectType } from "../util/get-project-info";
+import { ModuleConfig } from "./init";
+import { getEslintConfig } from "../util/config/get-eslint-config";
 
 export const add = new Command()
   .name("add")
@@ -17,12 +21,19 @@ export const add = new Command()
 
     try {
       // module.json 읽기
-      const moduleJsonPath = path.resolve(cwd, "module.json");
-      const moduleJson = await fs.readJSON(moduleJsonPath);
-      const { isSrcDir, styleType } = moduleJson;
+
+      const moduleConfig: ModuleConfig = await getModuleConfig();
+      const { isSrcDir, styleType, isTsx, type } = moduleConfig;
 
       spinner.succeed("module.json read successfully.");
 
+      const resolveEslintSpinner = loading("Detecting Eslint").start();
+
+      const eslintConfig = await getEslintConfig(moduleConfig);
+      resolveEslintSpinner.succeed("Resolve Eslint");
+
+      if (eslintConfig) {
+      }
       // srcDir 값에 따라 calendar 폴더 경로 결정
       const modulePath = isSrcDir
         ? path.join(cwd, "src", "components", "module", "calendar")
@@ -100,7 +111,7 @@ export const add = new Command()
       logger.info(`Final extracted folder contents: ${contents.join(", ")}`);
 
       // isTsx 값에 따라 javascript 또는 typescript 선택
-      const languageFolder = moduleJson.isTsx ? "typescript" : "javascript";
+      const languageFolder = moduleConfig.isTsx ? "typescript" : "javascript";
 
       // styleType에 따라 calendar-css-module 또는 calendar-tw 선택
       const styleFolder =
