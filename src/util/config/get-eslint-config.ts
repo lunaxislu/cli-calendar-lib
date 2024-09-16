@@ -25,7 +25,7 @@ export type Config = {
   filepath: string;
 };
 export async function getEslintConfig(
-  config: ModuleConfig
+  config: ModuleConfig,
 ): Promise<Config | null> {
   if (config.isTsx) return null;
   try {
@@ -43,6 +43,6 @@ export async function getEslintConfig(
     };
   } catch (err) {
     logger.error("Cannot Resolve Eslint");
-    throw new Error(`${err}`);
+    return null;
   }
 }

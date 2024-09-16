@@ -13,7 +13,7 @@ import {
 import { getQuoteChar } from "../get-project-info";
 
 export async function updateEslint(eslintConfig: Config) {
-  if (!eslintConfig) {
+  if (!eslintConfig || eslintConfig.isEmpty) {
     return; // @todo config 조건문 설정하기
   }
   const updaterSpinner = loading("update your eslint...").start();

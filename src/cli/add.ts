@@ -11,6 +11,7 @@ import { getModuleConfig } from "../util/config/get-module-config";
 import { ProjectType } from "../util/get-project-info";
 import { ModuleConfig } from "./init";
 import { getEslintConfig } from "../util/config/get-eslint-config";
+import { updateEslint } from "../util/updater/update-eslint";
 
 export const add = new Command()
   .name("add")
@@ -23,17 +24,25 @@ export const add = new Command()
       // module.json 읽기
 
       const moduleConfig: ModuleConfig = await getModuleConfig();
-      const { isSrcDir, styleType, isTsx, type } = moduleConfig;
-
+      const { isSrcDir, styleType, isTsx, type, name } = moduleConfig;
       spinner.succeed("module.json read successfully.");
 
-      const resolveEslintSpinner = loading("Detecting Eslint").start();
+      if (!isTsx) {
+        if (type === "react") {
+          const resolveEslintSpinner = loading("Detecting Eslint...").start();
+          const eslintConfig = await getEslintConfig(moduleConfig);
+          resolveEslintSpinner.succeed("Resolve Eslint");
+          if (eslintConfig) {
+            await updateEslint(eslintConfig);
+          }
 
-      const eslintConfig = await getEslintConfig(moduleConfig);
-      resolveEslintSpinner.succeed("Resolve Eslint");
+          resolveEslintSpinner.succeed(`Update your Eslint File of React-js `);
+        }
 
-      if (eslintConfig) {
+        if (type !== "react") {
+        }
       }
+
       // srcDir 값에 따라 calendar 폴더 경로 결정
       const modulePath = isSrcDir
         ? path.join(cwd, "src", "components", "module", "calendar")
