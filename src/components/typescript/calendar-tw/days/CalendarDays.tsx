@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { CALENDAR_SIZE, DAYS } from "../const/const";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-import { CalendarSizeType } from "../../calendar-css-module/types/Calendar";
+import { CalendarSizeType } from "../types/Calendar";
 
 const rowGridClassName = {
   smRow: "flex items-start justify-between gap-[10px] py-[10px]",
