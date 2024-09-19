@@ -13,10 +13,9 @@ interface CellProps {
   size: CalendarSizeType;
   mode?: CalendarModeType;
   page?: CalendarPageType;
+  currentDate: Dayjs; // Temporary value, Please manage this globally
 }
-const Cell = ({ day, size }: CellProps) => {
-  const currentDate = dayjs(); // Temporary value, Please manage this globally
-
+const Cell = ({ day, size, currentDate }: CellProps) => {
   /**
    * const SELECTED_DAY = "SELECTEDTYPE" used 56line;
    */

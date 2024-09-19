@@ -13,7 +13,7 @@ interface CalendarBodyProps extends HTMLAttributes<"div"> {
   size: CalendarSizeType;
   mode?: CalendarModeType;
   page?: CalendarPageType;
-  currentDate: Dayjs;
+  currentDate: Dayjs; // Temporary value, Please manage this globally
 }
 
 const CONTAINER_GRID_CLASSNAME = "flex flex-col items-end w-full";
@@ -32,7 +32,9 @@ const CalendarBody = ({ size, currentDate }: CalendarBodyProps) => {
     for (let i = 0; i < 7; i++) {
       const itemKey = day.format(FORMAT_BODY_DATE);
 
-      days.push(<Cell key={itemKey} size={size} day={day} />);
+      days.push(
+        <Cell key={itemKey} size={size} day={day} currentDate={currentDate} />,
+      );
       day = day.add(1, "day");
     }
     row.push(

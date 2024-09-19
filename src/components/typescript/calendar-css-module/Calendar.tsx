@@ -19,8 +19,8 @@ interface CalendarProps extends ComponentPropsWithoutRef<"div"> {
   page?: CalendarPageType; // If you want to put a condition on each page
 }
 const Calendar = ({ size = CALENDAR_SIZE.SMALL }: CalendarProps) => {
-  const today = dayjs();
-  const [currentDate, setCurrentDate] = useState<Dayjs>(today);
+  const today = dayjs(); // Temporary value, Please manage this globally
+  const [currentDate, setCurrentDate] = useState<Dayjs>(today); // Temporary value,
   const calendarGrid = useMemo(
     () =>
       clsx({
