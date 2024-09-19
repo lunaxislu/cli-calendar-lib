@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { HTMLAttributes } from "react";
 import { FORMAT_BODY_DATE } from "../const/const";
 import Cell from "./cell/Cell";
@@ -13,14 +13,13 @@ interface CalendarBodyProps extends HTMLAttributes<"div"> {
   size: CalendarSizeType;
   mode?: CalendarModeType;
   page?: CalendarPageType;
+  currentDate: Dayjs;
 }
 
 const CONTAINER_GRID_CLASSNAME = "flex flex-col items-end w-full";
 const ROW_GRID_CLASSNAME = "grid grid-cols-7 gap-[10px] w-full";
 
-const CalendarBody = ({ size }: CalendarBodyProps) => {
-  const currentDate = dayjs(); // Temporary value, Please manage this globally!
-
+const CalendarBody = ({ size, currentDate }: CalendarBodyProps) => {
   // The start day of the week that the monthStart belongs to
   const startDay = currentDate.startOf("month").startOf("week");
   // The last week that the monthStart belongs to

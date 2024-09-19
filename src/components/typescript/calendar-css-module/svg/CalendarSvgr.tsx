@@ -1,12 +1,12 @@
 import React, { SVGProps } from "react";
-interface SvrArrowProps extends SVGProps<SVGSVGElement> {}
+
 export const ArrowLeft = ({
   width = "35",
   height = "35",
   stroke = "#5C5C5C",
   strokeWidth = "2",
   fill = "none",
-}: SvrArrowProps) => (
+}: SVGProps<SVGSVGElement>) => (
   <svg
     width={width}
     height={height}
@@ -33,7 +33,7 @@ export const ArrowRight = ({
   stroke = "#5C5C5C",
   strokeWidth = "2",
   fill = "none",
-}: SvrArrowProps) => (
+}: SVGProps<SVGSVGElement>) => (
   <svg
     width={width}
     height={height}

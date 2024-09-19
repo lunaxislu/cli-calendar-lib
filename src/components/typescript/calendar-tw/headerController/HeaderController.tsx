@@ -1,13 +1,22 @@
 import clsx from "clsx";
 import { CALENDAR_SIZE } from "../const/const";
 import { ArrowLeft, ArrowRight } from "../svg/CalendarSvgr";
-import React, { useMemo } from "react";
+import React, { Dispatch, useCallback, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { CalendarSizeType } from "../types/Calendar";
+import { Dayjs } from "dayjs";
 const BASE_BTN_CLASSNAME =
   "bg-transparent absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center p-0 cursor-pointer w-[12px]";
 
-const HeaderController = ({ size }: { size: CalendarSizeType }) => {
+const HeaderController = ({
+  size,
+  setCurrentDate,
+  currentDate,
+}: {
+  size: CalendarSizeType;
+  setCurrentDate: Dispatch<Dayjs>;
+  currentDate: Dayjs;
+}) => {
   const conditionalModeClasses = useMemo(
     () =>
       clsx({
@@ -35,14 +44,29 @@ const HeaderController = ({ size }: { size: CalendarSizeType }) => {
       }),
     [size],
   );
-
+  // prev month
+  const clickPreMonthHandler = useCallback(() => {
+    setCurrentDate(currentDate.subtract(1, "month"));
+  }, [currentDate]);
+  // next month
+  const clickNextMonthHandler = useCallback(() => {
+    setCurrentDate(currentDate.add(1, "month"));
+  }, [currentDate]);
   return (
     <div className={twMerge(conditionalModeClasses)}>
-      <button type="button" className={twMerge(conditionalLeftButtonClasses)}>
+      <button
+        type="button"
+        onClick={clickPreMonthHandler}
+        className={twMerge(conditionalLeftButtonClasses)}
+      >
         <ArrowLeft />
       </button>
 
-      <button type="button" className={twMerge(conditionalRightButtonClasses)}>
+      <button
+        type="button"
+        onClick={clickNextMonthHandler}
+        className={twMerge(conditionalRightButtonClasses)}
+      >
         <ArrowRight />
       </button>
     </div>

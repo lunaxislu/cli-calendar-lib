@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { CALENDAR_SIZE } from "./const/const";
 import { ComponentPropsWithoutRef, useMemo } from "react";
@@ -11,12 +11,15 @@ import {
   CalendarModeType,
   CalendarPageType,
 } from "./types/Calendar";
+import dayjs, { Dayjs } from "dayjs";
 interface CalendarProps extends ComponentPropsWithoutRef<"div"> {
   size?: CalendarSizeType;
-  mode?: CalendarModeType;
-  page?: CalendarPageType;
+  mode?: CalendarModeType; //. if you want to put a condition on each Module
+  page?: CalendarPageType; // If you want to put a condition on each page
 }
 const Calendar = ({ size = CALENDAR_SIZE.SMALL }: CalendarProps) => {
+  const today = dayjs();
+  const [currentDate, setCurrentDate] = useState<Dayjs>(today);
   const calendarGrid = useMemo(
     () =>
       clsx({
@@ -42,9 +45,14 @@ const Calendar = ({ size = CALENDAR_SIZE.SMALL }: CalendarProps) => {
   return (
     <div className={twMerge(calendarGrid)}>
       <div className={twMerge(calendarInnerGrid)}>
-        <HeaderGrid size={size} />
+        <HeaderGrid
+          size={size}
+          setCurrentDate={setCurrentDate}
+          currentDate={currentDate}
+        />
         <CalendarDays size={size} />
-        <CalendarBody size={size} />
+        <CalendarBody size={size} currentDate={currentDate} />
+        {/* {props.children}  lf you want.*/}
       </div>
     </div>
   );
