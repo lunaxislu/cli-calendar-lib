@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import React from "react";
 import { CALENDAR_SIZE, FORMAT_CELL_DATE } from "../../const/const";
 import { largeSize, smallSize } from "../cell-style-helper";

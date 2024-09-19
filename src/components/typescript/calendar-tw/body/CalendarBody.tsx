@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import React, { HTMLAttributes } from "react";
 import { FORMAT_BODY_DATE } from "../const/const";
 import Cell from "./cell/Cell";
