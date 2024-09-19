@@ -1,88 +1,129 @@
-<br>
-
-# Caution
+# Description
 
 > This library is for next.js and react only.
 
+- Customize the calendar component
+- Data mapping support
+- And more... do whatever you need
+
+This CLI automatically copies the calendar component files from the GitHub repository and places them in your project.
 <br>
 
 # CLI Calendar
 
-A customizable calendar component CLI tool built with Day.js, supporting both CSS Modules and Tailwind CSS. This CLI allows you to easily integrate a calendar component into your project with a few simple commands.
+Add the calendar component to your project.
 
-## About the Library
+# Usage
 
-This library is specifically designed for **React** and **Next.js** projects. It provides an easy way to integrate customizable calendar components using Day.js, and supports both TypeScript and JavaScript environments. Whether you're building a React application or a Next.js project, this CLI tool helps you quickly add a calendar component with minimal dependencies.
+## create project
 
-## Features
+```bash
+# next.js
+npx create-next-app@latest
 
-- Add calendar components dynamically to your project
-- Choose between CSS Modules and Tailwind CSS for styling
-- Automatically installs required dependencies like Day.js, Tailwind CSS, clsx, and class-variance-authority
-- Supports both TypeScript and JavaScript projects
+# React
+npm create vite <project-name> --template react<ts,js>
 
-## Acknowledgements and Inspiration
+#or npm i create-react-app...
+```
 
-This project was inspired by **[shadcn](https://ui.shadcn.com/)**. The main goal was to reduce dependencies by focusing solely on CLI commands that copy and paste components from a URL. The components are retrieved directly from the following repository:
-
-- [Calendar Components](https://github.com/lunaxislu/cli-calendar-lib)
-
-This approach minimizes project dependencies and simplifies usage for beginners. Special thanks to shadcn for the inspiration behind this library. This library is designed with beginners in mind, providing a simple and easy-to-use tool for integrating calendar components into any project.
-
-## Installation
-
-To install the CLI tool globally, run:
+## install
 
 ```bash
 npm install cli-custom-calendar
-```
-
-Or, if you prefer pnpm or yarn:
-
-```bash
+#or
 pnpm add  cli-custom-calendar
-# or
 yarn add cli-custom-calendar
 ```
 
-## Usage
-
-Once the CLI is installed, you can run the following commands to set up your calendar component:
-
-### Initialize your project
-
-This command will detect your project setup and guide you through installing the necessary packages.
+## init
 
 ```bash
 npx cli-calendar init
 #or
-pnpm add cli-calendar init
+yarn, pnpm add cli-calendar init
 ```
 
-During the initialization, you'll be asked to choose a styling solution:
+During initialization, you'll be prompted to: <br>
+<span style='font-size:21px'>Choose your styling</span>
 
-- CSS Modules
-- Tailwind CSS
+- <span style='color:#886701; font-weight:bold; background-color:rgb(255, 205, 58); padding:0 5px '>CSS Modules</span>
+- <span style='color:#886701; font-weight:bold; background-color:rgb(255, 205, 58); padding:0 5px '>Tailwind CSS</span>
 
-Depending on your choice, the required packages will be installed, and the necessary configuration files will be created.
+<br>
 
-### 2. Add a calendar component
+<div style='font-size:18px'>After parsing your project info,
+<br>a <code>module.json</code> file will be created in your project</div>
 
-After initializing your project, you can add the calendar component to your project using the following command:
+<br>
+
+```tsx
+// module.json
+{
+  "name": "Calendar",
+  "version": "...",
+  "description": "A customizable calendar component using Day.js",
+  "packageManager": "pnpm", // your project manager
+  "isSrcDir": true, // path resolve
+  "type": "react", // react or next
+  "isRsc": false, // next.js pages or app
+  "isTsx": true, // typescript or javascript
+  "isUsingAppDir": false, // next.js & Dirpath
+  "styleType": "Tailwind",// style type
+  "pathResolve": "path" // template path
+}
+```
+
+<br>
+
+## add
+
+To add the calendar component, use the following CLI command:
 
 ```bash
 npx cli-calendar add
 #or
-yarn,pnpm cli-calendar add
+yarn, pnpm cli-calendar add
 ```
 
-This will automatically copy the calendar component files from the GitHub repository and place them in your project.
+## Removal Option
+
+After installing the Calendar Component, you can uninstall my package and remove the `module.json` file if you no longer need them.
+
+```bash
+npm uninstall cli-custom-calendar
+#or
+yarn, pnpm remove cli-custom-calendar
+```
 
 ## Dependencies
 
 This project uses the following dependencies:
 
-Day.js for date manipulation
-clsx for conditional classNames
-class-variance-authority for utility class management
-Tailwind CSS (optional) or CSS Modules
+- Day.js for date manipulation
+- clsx for conditional classNames
+- class-variance-authority for utility class management
+- Tailwind CSS (optional) or CSS Modules
+
+<br>
+<br>
+
+---
+
+<br>
+<br>
+
+# info
+
+```tsx
+//2024.09.19 ~ ing
+@todo
+mk demo
+dev template
+dev
+```
+
+# note
+
+<span style='font-size:21px'>If you encounter any issues or errors while using this package, please feel free to open an issue on the repository.</span>
+<a href='https://github.com/lunaxislu/cli-calendar-lib/issues'>https://github.com/lunaxislu/cli-calendar-lib/issues</a>
