@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import styles from "./calendar.module.css";
 import { CALENDAR_SIZE } from "./const/const";
 import { useMemo, useState } from "react";
 import HeaderGrid from "./headerController/HeaderGrid";

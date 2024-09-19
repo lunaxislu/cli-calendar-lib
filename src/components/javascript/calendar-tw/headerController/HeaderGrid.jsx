@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import dayjs from "dayjs";
 import { CALENDAR_SIZE, MONTH_FORMAT, YEAR_FORMAT } from "../const/const";
 import HeaderController from "./HeaderController";
 import React, { useMemo } from "react";
