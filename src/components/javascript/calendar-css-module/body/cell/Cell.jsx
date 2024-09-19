@@ -2,10 +2,10 @@ import dayjs, { Dayjs } from "dayjs";
 import React from "react";
 import { CALENDAR_SIZE, FORMAT_CELL_DATE } from "../../const/const";
 import { largeSize, smallSize } from "../cell-style-helper";
-
-const Cell = ({ day, size }) => {
-  const currentDate = dayjs(); // Temporary value, Please manage this globally
-
+/**
+ * @note currentDate // Temporary value, Please manage this globally
+ */
+const Cell = ({ day, size, currentDate }) => {
   /**
    * const SELECTED_DAY = "SELECTEDTYPE" used 56line;
    */
