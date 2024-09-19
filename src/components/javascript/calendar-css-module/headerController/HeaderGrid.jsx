@@ -1,12 +1,9 @@
 import clsx from "clsx";
-import dayjs from "dayjs";
 import styles from "./headerGrid.module.css";
 import { CALENDAR_SIZE, MONTH_FORMAT, YEAR_FORMAT } from "../const/const";
 import HeaderController from "./HeaderController";
 import React, { useMemo } from "react";
-const HeaderGrid = ({ size }) => {
-  const currentData = dayjs();
-
+const HeaderGrid = ({ size, currentDate, setCurrentDate }) => {
   const gridClasses = useMemo(
     () =>
       clsx(styles["base-grid"], {
@@ -27,10 +24,15 @@ const HeaderGrid = ({ size }) => {
   return (
     <div className={gridClasses}>
       <p className={styles["base-ph"]}>
-        <span className={txtClasses}>{currentData.format(YEAR_FORMAT)}</span>
-        {currentData.format(MONTH_FORMAT)}
+        <span className={txtClasses}>{currentDate.format(YEAR_FORMAT)}</span>
+        {currentDate.format(MONTH_FORMAT)}
       </p>
-      <HeaderController size={size} />
+      {/**Controller */}
+      <HeaderController
+        size={size}
+        setCurrentDate={setCurrentDate}
+        currentDate={currentDate}
+      />
     </div>
   );
 };

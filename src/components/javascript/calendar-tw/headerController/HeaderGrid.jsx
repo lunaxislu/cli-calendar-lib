@@ -5,9 +5,7 @@ import HeaderController from "./HeaderController";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-const HeaderGrid = ({ size }) => {
-  const currentData = dayjs();
-
+const HeaderGrid = ({ size, currentDate, setCurrentDate }) => {
   const gridClasses = useMemo(
     () =>
       clsx({
@@ -32,11 +30,17 @@ const HeaderGrid = ({ size }) => {
     <div className={twMerge(gridClasses)}>
       <p className="m-0 flex gap-[10px] text-[#121416] text-[14px] font-bold leading-[18px] tracking-[-0.36px]">
         <span className={twMerge(txtClasses)}>
-          {currentData.format(YEAR_FORMAT)}
+          {currentDate.format(YEAR_FORMAT)}
         </span>
-        {currentData.format(MONTH_FORMAT)}
+        {currentDate.format(MONTH_FORMAT)}
       </p>
-      <HeaderController size={size} />
+
+      {/**Controller */}
+      <HeaderController
+        size={size}
+        setCurrentDate={setCurrentDate}
+        currentDate={currentDate}
+      />
     </div>
   );
 };

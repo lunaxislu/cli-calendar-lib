@@ -4,9 +4,7 @@ import { FORMAT_BODY_DATE } from "../const/const";
 import Cell from "./cell/Cell";
 import styles from "./calendar-body.module.css";
 
-const CalendarBody = ({ size }) => {
-  const currentDate = dayjs(); // Temporary value, Please manage this globally
-
+const CalendarBody = ({ size, currentDate }) => {
   // The start day of the week that the monthStart belongs to
   const startDay = currentDate.startOf("month").startOf("week");
   // The last week that the monthStart belongs to
