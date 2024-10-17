@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 /**
  * Returns an array containing an object with one or more keys to the object, grouped by the specified key.
  *
@@ -21,4 +22,8 @@ export function formattedGroupByKey<T extends { date: string }>(
     }
     return acc;
   }, new Map<dayjs.FormatObject["format"], T[]>());
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

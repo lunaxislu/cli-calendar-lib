@@ -1,13 +1,20 @@
-.baseStyle * {
+.base-style * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   list-style: none;
 }
-
-.baseStyle *:focus {
+.button-base-reset {
+  all: unset;
+}
+.button-base-reset:focus {
   outline: none;
 }
+.svg-base-reset {
+  fill: none;
+}
+
+/*------Base End */
 
 .sm-calendar-grid {
   display: grid;
@@ -23,13 +30,13 @@
   color: #fff;
 }
 
-.sm-header-grid {
+.sm-nav-grid {
   display: flex;
   justify-content: center;
   position: relative;
 }
 
-.sm-button-container {
+.sm-nav-button-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -39,7 +46,7 @@
   justify-content: space-between;
 }
 
-.sm-button {
+.sm-nav-button {
   all: unset;
   display: flex;
   width: 28px;
@@ -49,16 +56,26 @@
   border-radius: 8px;
   border-color: rgb(39, 39, 42);
 }
-.sm-button:hover {
+.sm-nav-button:hover {
   transition: all 0.5s;
   background-color: #27272a;
 }
 
-.sm-button:hover svg path {
+.sm-nav-button:hover svg path {
   stroke: #fff;
 }
 
-.sm-days-grid {
+.sm-nav-svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sm-nav-svg-path {
+  stroke: #5c5c5c;
+  stroke-width: 2;
+}
+
+.sm-head-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   place-content: center;
@@ -69,7 +86,7 @@
   font-weight: bold;
 }
 
-.sm-cell-container-grid {
+.sm-table-grid {
   display: grid;
   row-gap: 14px;
   column-gap: 10px;
@@ -92,10 +109,6 @@
   transition: all 0.3s;
   background-color: #27272a;
   color: #bbb;
-}
-
-.sm-cell-button {
-  all: unset;
 }
 
 .sm-sameMonth {
@@ -144,18 +157,17 @@
   color: #fff;
   padding: 24px;
   border-radius: 16px;
-  border-color: #bbb;
   border-width: 4px;
 }
 
-.lg-header-grid {
+.lg-nav-grid {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   font-size: 24px;
 }
 
-.lg-button-container {
+.lg-nav-button-container {
   margin-top: 16px;
   display: flex;
   gap: 8px;
@@ -163,7 +175,7 @@
   border-bottom: 1px solid #cdcaca;
 }
 
-.lg-button {
+.lg-nav-button {
   all: unset;
   display: flex;
   justify-content: center;
@@ -176,12 +188,22 @@
   opacity: 0.5;
 }
 
-.lg-button:hover {
+.lg-nav-button:hover {
   transition: opacity 0.5s;
   opacity: 1;
 }
 
-.lg-days-grid {
+.lg-nav-svg {
+  width: 36px;
+  height: 36px;
+}
+
+.lg-nav-svg-path {
+  stroke: #000;
+  stroke-width: 3;
+}
+
+.lg-head-grid {
   margin-top: 24px;
   display: grid;
   grid-auto-rows: auto;
@@ -191,7 +213,7 @@
   font-size: 18px;
 }
 
-.lg-cell-container-grid {
+.lg-table-grid {
   margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -221,8 +243,6 @@
 }
 
 .lg-cell-button {
-  all: unset;
-  color: inherit;
   font-size: 14px;
 }
 
