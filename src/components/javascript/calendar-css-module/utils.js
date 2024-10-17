@@ -1,6 +1,5 @@
-import clsx from "clsx";
 import dayjs from "dayjs";
-import { twMerge } from "tailwind-merge";
+
 /**
  * Returns an array containing an object with one or more keys to the object, grouped by the specified key.
  *
@@ -19,7 +18,4 @@ export function formattedGroupByKey(array, format) {
     }
     return acc;
   }, new Map());
-}
-export function cn(...inputs) {
-  return twMerge(clsx(inputs));
 }
