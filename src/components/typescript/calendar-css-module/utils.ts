@@ -1,16 +1,18 @@
 import dayjs from "dayjs";
 
 /**
- * Returns an array containing an object with one or more keys to the object, grouped by the specified key.
+ * This function is used to map data when rendering the Calendar component.
+ * @param arr Each object in the array must have a `date` key.
+ * @param format I recommend not changing the default value of `format`.
+ * If you do change it,
+ * @todo Please also update the `format` prop in the Calendar component's contents and the `identiFormat` accordingly.
  *
- * @param arr Arrangement of objects : {...}[]
- * @param key Key that will be the standard for grouping
- * @returns HashMap
+ * @Note The `array` must contain objects with a `date` key in order for the grouping to work.
  */
 
 export function formattedGroupByKey<T extends { date: string }>(
   array: T[],
-  format: string,
+  format: string = "YYYY. MM. DD",
 ): Map<dayjs.FormatObject["format"], T[]> {
   return array.reduce((acc, cur) => {
     const dateKey = dayjs(cur.date).format(format);
