@@ -2,7 +2,6 @@ import React, { MouseEvent, ReactNode, useCallback, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import styles from "./calendar.module.css";
 import { cva } from "class-variance-authority";
-import { cn } from "./utils";
 
 const DAYS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -110,7 +109,6 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   defaultSetDate,
   defaultSelectDate,
   defaultSetSelectDate,
-  className,
   onClickHandler,
   size = "sm",
   render,
@@ -118,7 +116,6 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   identiFormat = "YYYY. MM. DD", // 기본 포맷 제공
   cellDateFormat = "D", // 기본 날짜 렌더링 포맷
 }: {
-  className?: string;
   defaultDate?: Dayjs;
   size?: "sm" | "lg";
   contents?: {
@@ -179,7 +176,7 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   );
 
   return (
-    <div className={cn(CalendarCVA({ size }), className)}>
+    <div className={CalendarCVA({ size })}>
       <NavCompo
         size={size}
         currentDate={currentDate}
@@ -218,14 +215,14 @@ function NavCompo({
       {currentDate.format("MMMM YYYY")}
       <div className={CalendarCVA({ nav_button_container: size })}>
         <button
-          className={cn(buttonCVA({ nav_button: size }))}
+          className={buttonCVA({ nav_button: size })}
           type="button"
           onClick={clickPreMonthHandler}
         >
           <ArrowLeft size={size} />
         </button>
         <button
-          className={cn(buttonCVA({ nav_button: size }))}
+          className={buttonCVA({ nav_button: size })}
           type="button"
           onClick={clickNextMonthHandler}
         >
@@ -384,7 +381,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
 }) {
   return (
     <svg
-      className={cn(svgCVA({ svg: size }))}
+      className={svgCVA({ svg: size })}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -392,7 +389,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
         <path
           id="Vector"
           d="M21.5 25.5L13.5 18L21.5 10.5"
-          className={cn(svgCVA({ path: size }))}
+          className={svgCVA({ path: size })}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -408,7 +405,7 @@ const ArrowRight = React.memo(function ArrowRight({
 }) {
   return (
     <svg
-      className={cn(svgCVA({ svg: size }))}
+      className={svgCVA({ svg: size })}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -416,7 +413,7 @@ const ArrowRight = React.memo(function ArrowRight({
         <path
           id="Vector"
           d="M13.5 25.5L21.5 18L13.5 10.5"
-          className={cn(svgCVA({ path: size }))}
+          className={svgCVA({ path: size })}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
