@@ -13,6 +13,7 @@ import {
 import { logger } from "../util/logger";
 import { getPackageInfo, readPackageJson } from "../util/get-package-info";
 import inquirer from "inquirer";
+import { getCompatibleInfo } from "../util/get-compatible-info";
 
 const REQUIRED_DAYJS_VERSION = "^1.10.4";
 
@@ -35,8 +36,11 @@ export const init = new Command()
   .action(async () => {
     const cwd = process.cwd();
     const spinner = loading("Detecting project info...").start();
-
     try {
+      const compatibleSpinner = loading("Check Compatible Project").start();
+      const { projectPackageJSON } = await getCompatibleInfo(cwd);
+      compatibleSpinner.succeed("Well Done...");
+
       // 1. 프로젝트 정보를 수집
       const projectInfo = await getProjectInfo(cwd);
 
@@ -51,9 +55,8 @@ export const init = new Command()
       logger.info(JSON.stringify(projectInfo, null, 2));
 
       // 2. 프로젝트의 package.json 확인
-      const projectPackageJson = await readPackageJson(cwd);
-      const projectDependencies = projectPackageJson.dependencies || {};
-      const projectDevDependencies = projectPackageJson.devDependencies || {};
+      const projectDependencies = projectPackageJSON.dependencies || {};
+      const projectDevDependencies = projectPackageJSON.devDependencies || {};
       const packageManager = projectInfo.packageManager;
       const isTsx = projectInfo.isTsx;
 
@@ -220,7 +223,7 @@ export const init = new Command()
 
       // 6. TypeScript 프로젝트일 경우 CSS 모듈 타입 확인 및 설치
       if (isTsx && styleChoice === "CSS Modules") {
-        const devDependencies = projectPackageJson.devDependencies || {};
+        const devDependencies = projectPackageJSON.devDependencies || {};
         const isCssModulesTypesInstalled =
           devDependencies["@types/css-modules"];
 
