@@ -183,7 +183,7 @@ export const init = new Command()
         }
       }
 
-      // 5. Day.js 설치 확인 및 업데이트
+      // 5. Day.js 설치 확인
       const currentDayjsVersion = projectDependencies.dayjs;
 
       if (!currentDayjsVersion) {
@@ -193,32 +193,12 @@ export const init = new Command()
         const dayjsSpinner = loading("Installing Day.js...").start();
         await execa(
           packageManager,
-          [
-            packageManager === "npm" ? "install" : "add",
-            `dayjs@${REQUIRED_DAYJS_VERSION}`,
-          ],
+          [packageManager === "npm" ? "install" : "add", `dayjs`],
           { cwd, stdio: "inherit" },
         );
-        dayjsSpinner.succeed(`Day.js@${REQUIRED_DAYJS_VERSION} installed.`);
-      } else if (currentDayjsVersion < REQUIRED_DAYJS_VERSION) {
-        // Day.js가 설치되어 있지만 버전이 낮으면 업데이트
-        logger.info(
-          `Day.js version is lower than required. Updating to ${REQUIRED_DAYJS_VERSION}...`,
-        );
-        const dayjsUpdateSpinner = loading("Updating Day.js...").start();
-        await execa(
-          packageManager,
-          [
-            packageManager === "npm" ? "install" : "add",
-            `dayjs@${REQUIRED_DAYJS_VERSION}`,
-          ],
-          { cwd, stdio: "inherit" },
-        );
-        dayjsUpdateSpinner.succeed(
-          `Day.js updated to ${REQUIRED_DAYJS_VERSION}.`,
-        );
+        dayjsSpinner.succeed("Day.js installed.");
       } else {
-        logger.success("Day.js is up to date.");
+        logger.success("Day.js is already installed.");
       }
 
       // 6. TypeScript 프로젝트일 경우 CSS 모듈 타입 확인 및 설치
@@ -258,7 +238,7 @@ export const init = new Command()
         "class-variance-authority" in projectDependencies ||
         "class-variance-authority" in projectDevDependencies;
 
-      if (!isClsxInstalled) {
+      if (!isClsxInstalled && styleChoice === "Tailwind") {
         const clsxSpinner = loading("Installing clsx...").start();
         await execa(
           packageManager,
