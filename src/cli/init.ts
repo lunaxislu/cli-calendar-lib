@@ -246,7 +246,7 @@ export const init = new Command()
           { cwd, stdio: "inherit" },
         );
         clsxSpinner.succeed("clsx installed successfully.");
-      } else {
+      } else if (isClsxInstalled && styleChoice === "Tailwind") {
         logger.success("clsx is already installed.");
       }
 
