@@ -304,7 +304,7 @@ export const init = new Command()
         styleChoice === "CSS Modules" ? "calendar-css-module" : "calendar-tw";
 
       // pathResolve 경로 동적으로 생성
-      const pathResolve = `https://raw.githubusercontent.com/lunaxislu/main/src/components/${languageFolder}/${styleFolder}`;
+      const pathResolve = `https://raw.githubusercontent.com/lunaxislu/cli-calendar-lib/main/src/components/${languageFolder}/${styleFolder}`;
 
       // 6. module.json 파일 생성
       const moduleJson = {
