@@ -73,6 +73,7 @@ export const add = new Command()
       // 파일 다운로드 및 저장
       for (const filePath of filesToDownload) {
         const fileUrl = `${githubBaseUrl}${filePath}`;
+        console.log(fileUrl);
         const localFilePath = path.join(modulePath, path.basename(filePath));
 
         spinner.start(`Downloading ${fileUrl}...`);
