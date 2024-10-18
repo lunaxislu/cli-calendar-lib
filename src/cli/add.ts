@@ -17,7 +17,7 @@ export const add = new Command()
       // module.json 읽기
       const moduleJsonPath = path.resolve(cwd, "module.json");
       const moduleJson = await fs.readJSON(moduleJsonPath);
-      const { isSrcDir, styleType, isTsx, isRsc } = moduleJson;
+      const { isSrcDir, styleType, isTsx, isRsc, pathResolve } = moduleJson;
       spinner.succeed("module.json read successfully.");
 
       // srcDir 값에 따라 calendar 폴더 경로 결정
@@ -46,34 +46,26 @@ export const add = new Command()
       // 필요한 디렉터리가 없으면 생성
       await fs.ensureDir(modulePath);
 
-      // GitHub raw URL 설정
-      const githubBaseUrl =
-        "https://raw.githubusercontent.com/lunaxislu/cli-calendar-lib/main/src/components";
-      const languageFolder = isTsx ? "typescript" : "javascript";
-      const styleFolder =
-        styleType === "CSS Modules" ? "calendar-css-module" : "calendar-tw";
-
-      // 다운로드할 파일 목록 설정
+      // 파일 다운로드할 목록 설정
       let filesToDownload: string[] = [];
       if (styleType === "CSS Modules") {
         // CSS Modules 스타일일 때는 3개 파일
         filesToDownload = [
-          `/${languageFolder}/${styleFolder}/Calendar.${isTsx ? "tsx" : "jsx"}`,
-          `/${languageFolder}/${styleFolder}/calendar.module.css`,
-          `/${languageFolder}/${styleFolder}/utils.${isTsx ? "ts" : "js"}`,
+          `/Calendar.${isTsx ? "tsx" : "jsx"}`,
+          `/calendar.module.css`,
+          `/utils.${isTsx ? "ts" : "js"}`,
         ];
       } else if (styleType === "Tailwind") {
         // Tailwind 스타일일 때는 2개 파일
         filesToDownload = [
-          `/${languageFolder}/${styleFolder}/Calendar.${isTsx ? "tsx" : "jsx"}`,
-          `/${languageFolder}/${styleFolder}/utils.${isTsx ? "ts" : "js"}`,
+          `/Calendar.${isTsx ? "tsx" : "jsx"}`,
+          `/utils.${isTsx ? "ts" : "js"}`,
         ];
       }
 
       // 파일 다운로드 및 저장
       for (const filePath of filesToDownload) {
-        const fileUrl = `${githubBaseUrl}${filePath}`;
-        console.log(fileUrl);
+        const fileUrl = `${pathResolve}${filePath}`;
         const localFilePath = path.join(modulePath, path.basename(filePath));
 
         spinner.start(`Downloading ${fileUrl}...`);
@@ -87,7 +79,7 @@ export const add = new Command()
         await fs.writeFile(localFilePath, fileContent);
         spinner.succeed(`Downloaded and saved ${path.basename(filePath)}`);
 
-        // RSC 처리 (isRsc가 true일 경우 "use client" 추가)
+        // RSC 처리 (isRsc가 true일 경우 Calendar.jsx 또는 Calendar.tsx에 "use client" 추가)
         if (isRsc && filePath.includes("Calendar")) {
           const rscComponentSpinner = loading(
             "Adding 'use client' to Calendar component...",
