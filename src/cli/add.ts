@@ -6,9 +6,7 @@ import inquirer from "inquirer";
 import { Command } from "commander";
 import { logger } from "../util/logger";
 import { loading } from "../util/loading";
-import fg from "fast-glob";
 import { getEslintConfig } from "../util/config/get-project-config";
-import { ProjectType } from "../util/get-project-info";
 import { ModuleConfig } from "./init";
 
 import {
