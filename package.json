@@ -44,7 +44,6 @@
   "license": "MIT",
   "dependencies": {
     "@antfu/ni": "^0.23.0",
-    "adm-zip": "^0.5.16",
     "commander": "^12.1.0",
     "cosmiconfig": "^9.0.0",
     "execa": "^9.3.1",

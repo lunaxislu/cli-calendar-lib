@@ -20,9 +20,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      adm-zip:
-        specifier: ^0.5.16
-        version: 0.5.16
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -497,10 +494,6 @@ packages:
 
   '@types/wrap-ansi@3.0.0':
     resolution: {integrity: sha512-ltIpx+kM7g/MLRZfkbL7EsCEjfzCcScLpkg37eXEtx5kmrAKBkTJwd1GIAjDSL8wTpM6Hzn5YO4pSb91BEwu1g==}
-
-  adm-zip@0.5.16:
-    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
-    engines: {node: '>=12.0'}
 
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
@@ -1633,8 +1626,6 @@ snapshots:
       '@types/node': 22.5.5
 
   '@types/wrap-ansi@3.0.0': {}
-
-  adm-zip@0.5.16: {}
 
   ansi-escapes@4.3.2:
     dependencies:
