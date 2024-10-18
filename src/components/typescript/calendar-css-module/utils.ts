@@ -9,13 +9,22 @@ import dayjs from "dayjs";
  *
  * @Note The `array` must contain objects with a `date` key in order for the grouping to work.
  */
-
-export function formattedGroupByKey<T extends { date: string }>(
+export function formattedGroupByKey<T extends { date: string | Date | number }>(
   array: T[],
-  format: string = "YYYY. MM. DD",
+  format: string = "YYYY. MM. DD"
 ): Map<dayjs.FormatObject["format"], T[]> {
   return array.reduce((acc, cur) => {
-    const dateKey = dayjs(cur.date).format(format);
+    if (!cur.date) {
+      throw new Error(`Missing 'date' field in object: ${JSON.stringify(cur)}`);
+    }
+
+    // 유틸리티 함수를 사용해 날짜를 안전하게 포맷
+    const dateKey = isValidDate(cur.date, format);
+
+    if (!dateKey) {
+      throw new Error(`Invalid date: ${cur.date}`); // 유효하지 않은 날짜일 경우 예외 처리
+    }
+
     if (acc.has(dateKey)) {
       acc.get(dateKey)?.push(cur);
     } else {
@@ -23,4 +32,45 @@ export function formattedGroupByKey<T extends { date: string }>(
     }
     return acc;
   }, new Map<dayjs.FormatObject["format"], T[]>());
+}
+
+export function isValidDate(
+  date: Date | number | string,
+  format: string = "YYYY. MM. DD"
+): string | null {
+  // Unix 타임스탬프 처리 (number로만 가능한 경우)
+  if (typeof date === "number") {
+    const isMilliseconds = date > 9999999999;
+    const parsedDate = isMilliseconds ? dayjs(date) : dayjs.unix(date);
+    return parsedDate.isValid() ? parsedDate.format(format) : null;
+  }
+
+  // 문자열로 들어오는 날짜를 처리
+  if (typeof date === "string") {
+    // ISO 8601 형식으로 파싱
+    const parsedDate = dayjs(date);
+    if (parsedDate.isValid()) {
+      return parsedDate.format(format);
+    }
+
+    // MM/DD/YYYY 형식의 문자열을 수동으로 처리
+    const parts = date.split("/");
+    if (parts.length === 3) {
+      // MM/DD/YYYY -> YYYY-MM-DD로 변환
+      const [month, day, year] = parts;
+      const reformattedDate = `${year}-${month}-${day}`;
+      const finalDate = dayjs(reformattedDate);
+      return finalDate.isValid() ? finalDate.format(format) : null;
+    }
+
+    return null; // 유효하지 않은 날짜 형식일 경우
+  }
+
+  // Date 객체 처리
+  if (date instanceof Date) {
+    const parsedDate = dayjs(date);
+    return parsedDate.isValid() ? parsedDate.format(format) : null;
+  }
+
+  return null; // 유효하지 않은 경우
 }

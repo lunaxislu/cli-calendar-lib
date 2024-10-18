@@ -29,7 +29,7 @@ const buttonCVA = cva(
         lg: "text-sm",
       },
     },
-  },
+  }
 );
 const CalendarCVA = cva("", {
   variants: {
@@ -85,15 +85,16 @@ const CellCVA = cva("", {
     },
     {
       cell: "sm",
+      isToday: true,
+      className: "bg-[#27272A]",
+    },
+    {
+      cell: "sm",
       isSelectDay: true,
       className:
         "bg-white text-black hover:transition-none hover:bg-white hover:text-black",
     },
-    {
-      cell: "sm",
-      isToday: true,
-      className: "bg-[#27272A]",
-    },
+
     {
       cell: "lg",
       isToday: true,
@@ -149,7 +150,7 @@ const Calendar = ({
       setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectDay],
+    [selectDay]
   );
 
   return (
@@ -190,7 +191,7 @@ function NavCompo({
     <nav
       className={cn(
         CalendarCVA({ nav: size }),
-        classNames?.[`${size}_nav_row`],
+        classNames?.[`${size}_nav_row`]
       )}
     >
       {currentDate.format("MMMM YYYY")}
@@ -198,14 +199,14 @@ function NavCompo({
       <div
         className={cn(
           CalendarCVA({ nav_button_container: size }),
-          classNames?.[`${size}_nav_button_grid`],
+          classNames?.[`${size}_nav_button_grid`]
         )}
       >
         {/* nav_button & nav_button_previous */}
         <button
           className={cn(
             buttonCVA({ nav: size }),
-            classNames?.[`${size}_nav_button`],
+            classNames?.[`${size}_nav_button`]
           )}
           type="button"
           onClick={clickPreMonthHandler}
@@ -217,7 +218,7 @@ function NavCompo({
         <button
           className={cn(
             buttonCVA({ nav: size }),
-            classNames?.[`${size}_nav_button`],
+            classNames?.[`${size}_nav_button`]
           )}
           type="button"
           onClick={clickNextMonthHandler}
@@ -235,7 +236,7 @@ const HeadCompo = React.memo(function Days({ size, classNames }) {
     <header
       className={cn(
         CalendarCVA({ header: size }),
-        classNames?.[`${size}_days_row`],
+        classNames?.[`${size}_days_row`]
       )}
     >
       {DAYS.map((day) => (
@@ -300,14 +301,14 @@ function TableCompo({
               isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
               selectDay?.isSame(day, "day") &&
                 classNames?.[`${size}_cell_isSelectDay`],
-              isToday && classNames?.[`${size}_cell_isToday`],
+              isToday && classNames?.[`${size}_cell_isToday`]
             )}
           >
             <button
               type="button"
               className={cn(
                 buttonCVA({ cell: size }),
-                classNames?.[`${size}_cell_button`],
+                classNames?.[`${size}_cell_button`]
               )}
             >
               {day.format(cellDateFormat)}
@@ -317,7 +318,7 @@ function TableCompo({
               <p
                 className={cn(
                   CellCVA({ cell_value: size }),
-                  classNames?.[`${size}_cell_value`],
+                  classNames?.[`${size}_cell_value`]
                 )}
               >
                 {value.map((val) =>
@@ -326,12 +327,12 @@ function TableCompo({
                       {key} : {value}
                       <br />
                     </React.Fragment>
-                  )),
+                  ))
                 )}
               </p>
             )}
           </li>
-        ),
+        )
       );
       day = day.add(1, "day");
     }
@@ -341,7 +342,7 @@ function TableCompo({
     <ul
       className={cn(
         CalendarCVA({ table: size }),
-        classNames?.[`${size}_table`],
+        classNames?.[`${size}_table`]
       )}
       onClick={(e) => {
         const target = e.target;
@@ -351,21 +352,21 @@ function TableCompo({
         if (!targetLi) return;
         const parsedDay = dayjs(
           targetLi.dataset.id,
-          contents?.format ?? identiFormat,
+          contents?.format ?? identiFormat
         );
         onChangeSelectDay(parsedDay);
 
         if (
           !contents?.values ||
           !contents.values.get(
-            parsedDay.format(contents?.format ?? identiFormat),
+            parsedDay.format(contents?.format ?? identiFormat)
           )
         )
           return;
 
         onClickDayHandler(
           contents?.values,
-          parsedDay.format(contents?.format ?? identiFormat),
+          parsedDay.format(contents?.format ?? identiFormat)
         );
       }}
     >
@@ -379,7 +380,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
     <svg
       className={cn(
         svgCVA({ svg: size }),
-        classNames?.[`${size}_nav_button_svg`],
+        classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -392,7 +393,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
           strokeLinejoin="round"
           className={cn(
             svgCVA({ path: size }),
-            classNames?.[`${size}_nav_button_path`],
+            classNames?.[`${size}_nav_button_path`]
           )}
         />
       </g>
@@ -405,7 +406,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
     <svg
       className={cn(
         svgCVA({ svg: size }),
-        classNames?.[`${size}_nav_button_svg`],
+        classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -418,7 +419,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
           strokeLinejoin="round"
           className={cn(
             svgCVA({ path: size }),
-            classNames?.[`${size}_nav_button_path`],
+            classNames?.[`${size}_nav_button_path`]
           )}
         />
       </g>
