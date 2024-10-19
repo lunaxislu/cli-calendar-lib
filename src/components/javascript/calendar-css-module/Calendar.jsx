@@ -146,8 +146,8 @@ const Calendar = ({
     (day) => {
       setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectDay],
+
+    [selectDay, setUpdateSelectDate],
   );
 
   return (

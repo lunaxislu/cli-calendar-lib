@@ -186,8 +186,7 @@ const Calendar = <T extends DateItem>({
     (day: Dayjs) => {
       setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectDay],
+    [selectDay, setUpdateSelectDate],
   );
 
   return (
