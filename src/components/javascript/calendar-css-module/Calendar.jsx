@@ -111,7 +111,6 @@ const Calendar = ({
   defaultDate,
   defaultSetDate,
   defaultSelectDate,
-  className,
   classNames,
   defaultSetSelectDate,
   onClickHandler,
@@ -151,7 +150,12 @@ const Calendar = ({
   );
 
   return (
-    <div className={CalendarCVA({ calendar_grid: size, className })}>
+    <div
+      className={CalendarCVA({
+        calendar_grid: size,
+        className: classNames?.[`${size}_calendar_grid`],
+      })}
+    >
       <NavCompo
         classNames={classNames}
         size={size}

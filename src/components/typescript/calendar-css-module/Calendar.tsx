@@ -118,7 +118,6 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   defaultDate,
   defaultSetDate,
   defaultSelectDate,
-  className,
   classNames,
   defaultSetSelectDate,
   onClickHandler,
@@ -129,7 +128,6 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   cellDateFormat = "D", // 기본 날짜 렌더링 포맷
 }: {
   defaultDate?: Dayjs;
-  className?: string;
   classNames?: ClassNames;
   size?: "sm" | "lg";
   contents?: {
@@ -190,7 +188,12 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   );
 
   return (
-    <div className={CalendarCVA({ calendar_grid: size, className })}>
+    <div
+      className={CalendarCVA({
+        calendar_grid: size,
+        className: classNames?.[`${size}_calendar_grid`],
+      })}
+    >
       <NavCompo
         classNames={classNames}
         size={size}
