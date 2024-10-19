@@ -1,7 +1,15 @@
-import React, { MouseEvent, ReactNode, useCallback, useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
+import React, { useCallback, useMemo, useState } from "react";
+import dayjs, { ConfigType, Dayjs } from "dayjs";
 import styles from "./calendar.module.css";
 import { cva, VariantProps } from "class-variance-authority";
+type DateItem = { date: ConfigType };
+type FormattedDateItem<T extends DateItem> = Omit<T, "date"> & {
+  date: string;
+};
+type CalendarValues<T extends DateItem> = Map<
+  dayjs.FormatObject["format"],
+  FormattedDateItem<T>[]
+>;
 type CalendarStyles = VariantProps<typeof CalendarCVA> &
   VariantProps<typeof CellCVA> &
   VariantProps<typeof svgCVA> &
@@ -9,7 +17,10 @@ type CalendarStyles = VariantProps<typeof CalendarCVA> &
 type ClassNames = Partial<{
   [K in keyof CalendarStyles as `sm_${K}` | `lg_${K}`]: string;
 }>;
-const _DAYS = [0, 1, 2, 3, 4, 5, 6];
+
+type GroupedDateItems<T extends DateItem> = CalendarValues<T>;
+export const DISPLAY_FORMAT = "YYYY. MM. DD";
+const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
 const svgCVA = cva(styles["svg-base-reset"], {
   variants: {
@@ -114,7 +125,7 @@ const CellCVA = cva("", {
     },
   ],
 });
-const Calendar = <T extends { [key: string | number]: ReactNode }>({
+const Calendar = <T extends DateItem>({
   defaultDate,
   defaultSetDate,
   defaultSelectDate,
@@ -123,68 +134,60 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
   onClickHandler,
   size = "sm",
   render,
-  contents,
-  identiFormat = "YYYY. MM. DD", // 기본 포맷 제공
+  values,
   cellDateFormat = "D", // 기본 날짜 렌더링 포맷
 }: {
   defaultDate?: Dayjs;
   classNames?: ClassNames;
   size?: "sm" | "lg";
-  contents?: {
-    values: Map<dayjs.FormatObject["format"], T[]>;
-    format?: string;
-  };
+  values?: T[];
   defaultSetDate?: React.Dispatch<React.SetStateAction<Dayjs>>;
   defaultSetSelectDate?: React.Dispatch<React.SetStateAction<Dayjs | null>>;
   defaultSelectDate?: Dayjs | null;
-  onClickHandler?: (
-    values: Map<dayjs.FormatObject["format"], T[]>,
-    key: dayjs.FormatObject["format"]
-  ) => void;
-  identiFormat?: string;
+  onClickHandler?: (value: FormattedDateItem<T>[]) => void;
   cellDateFormat?: string;
   render?: (props: {
-    currentDate: Dayjs;
     selectDay: Dayjs | null;
     day: Dayjs;
-    value?: T[];
     size: "sm" | "lg";
-    cellDateFormat: string;
-    itemKey: string;
+    onChangeSelectDay: (day: Dayjs) => void;
+    value: FormattedDateItem<T>[] | [];
+    cellDateFormat?: string;
+    isToday: boolean;
+    isSameMonth: boolean;
+    classNames?: ClassNames;
+    onClickDayHandler?: (value: FormattedDateItem<T>[]) => void;
   }) => JSX.Element;
 }) => {
   const [currentDate, setCurrentDate] = useState<Dayjs>(defaultDate ?? dayjs());
   const [selectDay, setSelectDay] = useState<Dayjs | null>(
-    defaultSelectDate ?? null
+    defaultSelectDate ?? null,
   );
   const setUpdateDate = defaultSetDate ?? setCurrentDate;
   const setUpdateSelectDate = defaultSetSelectDate ?? setSelectDay;
-
+  const displayValues = useMemo(() => formattedByDate(values ?? []), [values]);
   const clickPreMonthHandler = useCallback(() => {
     setUpdateDate(currentDate.subtract(1, "month"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentDate]);
+  }, [currentDate, setUpdateDate]);
 
   const clickNextMonthHandler = useCallback(() => {
     setUpdateDate(currentDate.add(1, "month"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentDate]);
+  }, [currentDate, setUpdateDate]);
 
-  const defaultOnClickHandler = (
-    values: Map<dayjs.FormatObject["format"], T[]>,
-    key: dayjs.FormatObject["format"]
-  ) => {
-    if (!values) return;
-    const value = values.get(key);
-    console.log("value : ", value);
-  };
+  const defaultOnClickHandler = useCallback(
+    (value: FormattedDateItem<T>[]) => {
+      if (!values) return;
+      console.log("value : ", value);
+    },
+    [values],
+  );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day: Dayjs) => {
       setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectDay]
+    [selectDay],
   );
 
   return (
@@ -203,7 +206,7 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
       />
       <HeadCompo size={size} classNames={classNames} />
       <TableCompo
-        contents={contents}
+        displayValues={displayValues}
         classNames={classNames}
         size={size}
         currentDate={currentDate}
@@ -211,14 +214,13 @@ const Calendar = <T extends { [key: string | number]: ReactNode }>({
         onClickDayHandler={onClickDayHandler}
         onChangeSelectDay={onChangeSelectDay}
         render={render}
-        identiFormat={identiFormat}
         cellDateFormat={cellDateFormat}
       />
     </div>
   );
 };
 
-function NavCompo({
+const NavCompo = React.memo(function NavCompo({
   currentDate,
   clickPreMonthHandler,
   clickNextMonthHandler,
@@ -268,7 +270,7 @@ function NavCompo({
       </div>
     </nav>
   );
-}
+});
 
 const HeadCompo = React.memo(function Days({
   size,
@@ -284,7 +286,7 @@ const HeadCompo = React.memo(function Days({
         className: classNames?.[`${size}_days_row`],
       })}
     >
-      {_DAYS.map((day) => (
+      {WEEK_DAYS.map((day) => (
         <span key={day} className={classNames?.[`${size}_day_value`]}>
           {dayjs()
             .day(day)
@@ -295,43 +297,37 @@ const HeadCompo = React.memo(function Days({
   );
 });
 
-function TableCompo<T extends { [key: string | number]: ReactNode }>({
+const TableCompo = function TableCompo<T extends DateItem>({
   currentDate,
   selectDay,
   size,
   classNames,
   onChangeSelectDay,
-  contents,
+  displayValues,
   onClickDayHandler,
   render,
-  identiFormat,
   cellDateFormat,
 }: {
+  displayValues: GroupedDateItems<T> | null;
   classNames?: ClassNames;
   currentDate: Dayjs;
   size: "sm" | "lg";
   selectDay: Dayjs | null;
   onChangeSelectDay: (day: Dayjs) => void;
-  onClickDayHandler: (
-    values: Map<dayjs.FormatObject["format"], T[]>,
-    key: dayjs.FormatObject["format"]
-  ) => void;
-  contents?: {
-    values: Map<dayjs.FormatObject["format"], T[]>;
-    format?: string;
-  };
+  onClickDayHandler: (value: FormattedDateItem<T>[]) => void;
+  cellDateFormat: string;
   render?: (props: {
-    currentDate: Dayjs;
     selectDay: Dayjs | null;
     day: Dayjs;
-    value?: T[];
     size: "sm" | "lg";
-    cellDateFormat: string;
-    itemKey: string;
+    onChangeSelectDay: (day: Dayjs) => void;
+    value: FormattedDateItem<T>[] | [];
+    cellDateFormat?: string;
+    isToday: boolean;
+    isSameMonth: boolean;
+    classNames?: ClassNames;
+    onClickDayHandler?: (value: FormattedDateItem<T>[]) => void;
   }) => JSX.Element;
-
-  identiFormat: string;
-  cellDateFormat: string;
 }) {
   const startDay = currentDate.startOf("month").startOf("week");
   const endDay = currentDate.endOf("month").endOf("week");
@@ -341,71 +337,40 @@ function TableCompo<T extends { [key: string | number]: ReactNode }>({
 
   while (day <= endDay) {
     for (let i = 0; i < 7; i++) {
-      const itemKey = day.format(contents?.format ?? identiFormat);
+      const itemKey = day.format(DISPLAY_FORMAT);
       const isToday = day.isSame(today, "D");
       const isSameMonth = day.isSame(currentDate, "month");
-      const value = contents?.values?.get(itemKey as string) || [];
+      const value = displayValues?.get(itemKey as string) || [];
 
       dates.push(
         render ? (
           render({
-            currentDate,
             selectDay,
             day,
             size,
+            onChangeSelectDay,
             value,
             cellDateFormat,
-            itemKey,
+            isToday,
+            isSameMonth,
+            classNames,
+            onClickDayHandler,
           })
         ) : (
-          <li
-            data-id={itemKey}
-            key={`${itemKey}-${i}`}
-            className={[
-              CellCVA({
-                cell: size,
-                cell_isSameMonth: isSameMonth,
-                cell_isSelectDay: selectDay?.isSame(day, "day"),
-                cell_isToday: isToday,
-              }),
-              classNames?.[`${size}_cell`],
-              isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
-              selectDay?.isSame(day, "day") &&
-                classNames?.[`${size}_cell_isSelectDay`],
-              isToday && classNames?.[`${size}_cell_isToday`],
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <button
-              type="button"
-              className={buttonCVA({
-                cell_button: size,
-                className: classNames?.[`${size}_cell_button`],
-              })}
-            >
-              {day.format(cellDateFormat)}
-            </button>
-
-            {value.length > 0 && (
-              <p
-                className={CellCVA({
-                  cell_value: size,
-                  className: classNames?.[`${size}_cell_value`],
-                })}
-              >
-                {value.map((val) =>
-                  Object.entries(val).map(([key, value]) => (
-                    <React.Fragment key={`${key}+${value}`}>
-                      {key} : {value}
-                      <br />
-                    </React.Fragment>
-                  ))
-                )}
-              </p>
-            )}
-          </li>
-        )
+          <Cell
+            key={itemKey}
+            day={day}
+            isToday={isToday}
+            isSameMonth={isSameMonth}
+            size={size}
+            selectDay={selectDay}
+            cellDateFormat={cellDateFormat}
+            value={value}
+            onClickDayHandler={onClickDayHandler}
+            onChangeSelectDay={onChangeSelectDay}
+            classNames={classNames}
+          />
+        ),
       );
       day = day.add(1, "day");
     }
@@ -416,36 +381,88 @@ function TableCompo<T extends { [key: string | number]: ReactNode }>({
         table: size,
         className: classNames?.[`${size}_table`],
       })}
-      onClick={(e: MouseEvent<HTMLUListElement>) => {
-        const target = e.target as HTMLElement;
-        if (target instanceof HTMLUListElement) return;
-
-        const targetLi = target.closest("li");
-        if (!targetLi) return;
-        const parsedDay = dayjs(
-          targetLi.dataset.id,
-          contents?.format ?? identiFormat
-        );
-        onChangeSelectDay(parsedDay);
-
-        if (
-          !contents?.values ||
-          !contents.values.get(
-            parsedDay.format(contents?.format ?? identiFormat)
-          )
-        )
-          return;
-
-        onClickDayHandler(
-          contents?.values,
-          parsedDay.format(contents?.format ?? identiFormat)
-        );
-      }}
     >
       {dates}
     </ul>
   );
-}
+};
+
+const Cell = function Cell<T extends DateItem>({
+  selectDay,
+  day,
+  size,
+  value,
+  onClickDayHandler,
+  onChangeSelectDay,
+  cellDateFormat,
+  classNames,
+  isSameMonth,
+  isToday,
+}: {
+  selectDay: Dayjs | null;
+  day: Dayjs;
+  size: "sm" | "lg";
+  onChangeSelectDay: (day: Dayjs) => void;
+  value: FormattedDateItem<T>[] | [];
+  cellDateFormat?: string;
+  isToday: boolean;
+  isSameMonth: boolean;
+  classNames?: ClassNames;
+  onClickDayHandler?: (value: FormattedDateItem<T>[]) => void;
+}) {
+  const handleClick = () => {
+    onChangeSelectDay(day);
+    if (value.length > 0) onClickDayHandler?.(value);
+  };
+
+  const generateCellClasses = () =>
+    [
+      CellCVA({
+        cell: size,
+        cell_isSameMonth: isSameMonth,
+        cell_isSelectDay: selectDay?.isSame(day, "day"),
+        cell_isToday: isToday,
+      }),
+      classNames?.[`${size}_cell`],
+      isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
+      selectDay?.isSame(day, "day") && classNames?.[`${size}_cell_isSelectDay`],
+      isToday && classNames?.[`${size}_cell_isToday`],
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+  const renderValueItems = (val: FormattedDateItem<T>) =>
+    Object.entries(val).map(([key, value]) => (
+      <React.Fragment key={`${key}+${value}`}>
+        {key} : {value}
+        <br />
+      </React.Fragment>
+    ));
+  return (
+    <li onClick={handleClick} className={generateCellClasses()}>
+      <button
+        type="button"
+        className={buttonCVA({
+          cell_button: size,
+          className: classNames?.[`${size}_cell_button`],
+        })}
+      >
+        {day.format(cellDateFormat)}
+      </button>
+
+      {value.length > 0 && (
+        <p
+          className={CellCVA({
+            cell_value: size,
+            className: classNames?.[`${size}_cell_value`],
+          })}
+        >
+          {value.map(renderValueItems)}
+        </p>
+      )}
+    </li>
+  );
+};
 
 const ArrowLeft = React.memo(function ArrowLeft({
   size,
@@ -510,5 +527,39 @@ const ArrowRight = React.memo(function ArrowRight({
     </svg>
   );
 });
+function formattedByDate<T extends DateItem>(
+  array: T[],
+  format: string = DISPLAY_FORMAT,
+): GroupedDateItems<T> | null {
+  if (array.length === 0) return null;
+  return array.reduce((acc, cur) => {
+    if (!cur.date)
+      throw new Error(
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
+      );
+    const dateKey = isValidDate(cur.date, format);
 
+    if (!dateKey) {
+      throw new Error(`Invalid date: ${cur.date}`);
+    }
+
+    const newCur = { ...cur, date: dateKey };
+    const existingGroup = acc.get(dateKey) ?? [];
+    acc.set(dateKey, [...existingGroup, newCur]);
+
+    return acc;
+  }, new Map<dayjs.FormatObject["format"], FormattedDateItem<T>[]>());
+}
+
+function isValidDate(
+  date: ConfigType,
+  format: string = DISPLAY_FORMAT,
+): string | null {
+  if (typeof date === "number") {
+    const parsedDate = date > 9999999999 ? dayjs(date) : dayjs.unix(date);
+    return parsedDate.isValid() ? parsedDate.format(format) : null;
+  }
+  const parsedDate = dayjs(date);
+  return parsedDate.isValid() ? parsedDate.format(format) : null;
+}
 export { Calendar };

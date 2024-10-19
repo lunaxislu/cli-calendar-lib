@@ -36,33 +36,24 @@ export function formattedGroupByKey(array, format = "YYYY. MM. DD") {
   }, new Map());
 }
 
-export function isValidDate(date, format = "YYYY. MM. DD") {
+function isValidDate(date, format = "YYYY. MM. DD") {
   // Unix 타임스탬프 처리 (number로만 가능한 경우)
   if (typeof date === "number") {
-    const isMilliseconds = date > 9999999999;
-    const parsedDate = isMilliseconds ? dayjs(date) : dayjs.unix(date);
+    const parsedDate = date > 9999999999 ? dayjs(date) : dayjs.unix(date);
     return parsedDate.isValid() ? parsedDate.format(format) : null;
   }
 
   // 문자열로 들어오는 날짜를 처리
   if (typeof date === "string") {
-    // ISO 8601 형식으로 파싱
-    const parsedDate = dayjs(date);
-    if (parsedDate.isValid()) {
-      return parsedDate.format(format);
-    }
+    // ISO 8601 및 MM/DD/YYYY 형식을 자동으로 처리
+    const parsedDate = dayjs(
+      date,
+      ["MM/DD/YYYY", "YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"],
+      true,
+    );
 
-    // MM/DD/YYYY 형식의 문자열을 수동으로 처리
-    const parts = date.split("/");
-    if (parts.length === 3) {
-      // MM/DD/YYYY -> YYYY-MM-DD로 변환
-      const [month, day, year] = parts;
-      const reformattedDate = `${year}-${month}-${day}`;
-      const finalDate = dayjs(reformattedDate);
-      return finalDate.isValid() ? finalDate.format(format) : null;
-    }
-
-    return null; // 유효하지 않은 날짜 형식일 경우
+    // 유효한 날짜인지 확인 후 포맷 반환
+    return parsedDate.isValid() ? parsedDate.format(format) : null;
   }
 
   // Date 객체 처리
