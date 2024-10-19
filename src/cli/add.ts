@@ -53,7 +53,6 @@ export const add = new Command()
         filesToDownload = [
           `/Calendar.${isTsx ? "tsx" : "jsx"}`,
           `/calendar.module.css`,
-          `/utils.${isTsx ? "ts" : "js"}`,
         ];
       } else if (styleType === "Tailwind") {
         // Tailwind 스타일일 때는 2개 파일

@@ -19,7 +19,7 @@ type ClassNames = Partial<{
 }>;
 
 type GroupedDateItems<T extends DateItem> = CalendarValues<T>;
-export const DISPLAY_FORMAT = "YYYY. MM. DD";
+const DISPLAY_FORMAT = "YYYY. MM. DD";
 const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
 const svgCVA = cva(styles["svg-base-reset"], {
@@ -150,13 +150,13 @@ const Calendar = <T extends DateItem>({
     selectDay: Dayjs | null;
     day: Dayjs;
     size: "sm" | "lg";
-    onChangeSelectDay: (day: Dayjs) => void;
     value: FormattedDateItem<T>[] | [];
-    cellDateFormat?: string;
+    cellDateFormat: string;
     isToday: boolean;
     isSameMonth: boolean;
-    classNames?: ClassNames;
+    onChangeSelectDay: (day: Dayjs) => void;
     onClickDayHandler?: (value: FormattedDateItem<T>[]) => void;
+    classNames?: ClassNames;
   }) => JSX.Element;
 }) => {
   const [currentDate, setCurrentDate] = useState<Dayjs>(defaultDate ?? dayjs());
@@ -271,7 +271,7 @@ const NavCompo = React.memo(function NavCompo({
   );
 });
 
-const HeadCompo = React.memo(function Days({
+const HeadCompo = React.memo(function HeadCompo({
   size,
   classNames,
 }: {
@@ -319,13 +319,13 @@ const TableCompo = function TableCompo<T extends DateItem>({
     selectDay: Dayjs | null;
     day: Dayjs;
     size: "sm" | "lg";
-    onChangeSelectDay: (day: Dayjs) => void;
     value: FormattedDateItem<T>[] | [];
-    cellDateFormat?: string;
+    cellDateFormat: string;
     isToday: boolean;
     isSameMonth: boolean;
-    classNames?: ClassNames;
+    onChangeSelectDay: (day: Dayjs) => void;
     onClickDayHandler?: (value: FormattedDateItem<T>[]) => void;
+    classNames?: ClassNames;
   }) => JSX.Element;
 }) {
   const startDay = currentDate.startOf("month").startOf("week");
