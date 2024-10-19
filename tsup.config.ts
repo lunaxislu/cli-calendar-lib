@@ -5,9 +5,11 @@ export default defineConfig({
   dts: true, // TypeScript의 타입 정의 파일을 생성
   entry: ["src/index.ts"], // 번들링할 엔트리 파일
   external: [
+    "@types/react",
+    "@types/react-dom",
+    "@types/css-modules",
     "react",
     "react-dom",
-    "@types/css-modules",
     "clsx",
     "class-variance-authority",
     "tailwind-merge",
