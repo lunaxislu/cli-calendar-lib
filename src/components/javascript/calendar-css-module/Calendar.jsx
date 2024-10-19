@@ -3,15 +3,14 @@ import dayjs from "dayjs";
 import styles from "./calendar.module.css";
 import { cva } from "class-variance-authority";
 
-const DAYS = [0, 1, 2, 3, 4, 5, 6];
-
+const _DAYS = [0, 1, 2, 3, 4, 5, 6];
 const svgCVA = cva(styles["svg-base-reset"], {
   variants: {
-    svg: {
+    nav_button_svg: {
       sm: styles["sm-nav-svg"],
       lg: styles["lg-nav-svg"],
     },
-    path: {
+    nav_button_svg_path: {
       sm: styles["sm-nav-svg-path"],
       lg: styles["lg-nav-svg-path"],
     },
@@ -31,11 +30,11 @@ const buttonCVA = cva(styles["button-base-reset"], {
 });
 const CalendarCVA = cva(styles["base-style"], {
   variants: {
-    size: {
+    calendar_grid: {
       sm: styles["sm-calendar-grid"],
       lg: styles["lg-calendar-grid"],
     },
-    nav: {
+    nav_row: {
       sm: styles["sm-nav-grid"],
       lg: styles["lg-nav-grid"],
     },
@@ -45,9 +44,13 @@ const CalendarCVA = cva(styles["base-style"], {
       lg: styles["lg-nav-button-container"],
     },
 
-    header: {
+    days_row: {
       sm: styles["sm-head-grid"],
       lg: styles["lg-head-grid"],
+    },
+    day_value: {
+      sm: "",
+      lg: "",
     },
     table: {
       sm: styles["sm-table-grid"],
@@ -62,13 +65,13 @@ const CellCVA = cva("", {
       sm: styles["sm-cell"],
       lg: styles["lg-cell"],
     },
-    isSameMonth: {
+    cell_isSameMonth: {
       true: "",
     },
-    isSelectDay: {
+    cell_isSelectDay: {
       true: "",
     },
-    isToday: {
+    cell_isToday: {
       true: "",
     },
     cell_value: {
@@ -79,27 +82,27 @@ const CellCVA = cva("", {
   compoundVariants: [
     {
       cell: "sm",
-      isSameMonth: true,
+      cell_isSameMonth: true,
       className: styles["sm-sameMonth"],
     },
     {
       cell: "sm",
-      isSelectDay: true,
+      cell_isSelectDay: true,
       className: styles["sm-selectDay"],
     },
     {
       cell: "sm",
-      isToday: true,
+      cell_isToday: true,
       className: styles["sm-today"],
     },
     {
       cell: "lg",
-      isToday: true,
+      cell_isToday: true,
       className: styles["lg-today"],
     },
     {
       cell: "lg",
-      isSelectDay: true,
+      cell_isSelectDay: true,
       className: styles["lg-selectDay"],
     },
   ],
@@ -144,11 +147,11 @@ const Calendar = ({
       setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectDay],
+    [selectDay]
   );
 
   return (
-    <div className={CalendarCVA({ size, className })}>
+    <div className={CalendarCVA({ calendar_grid: size, className })}>
       <NavCompo
         classNames={classNames}
         size={size}
@@ -183,7 +186,7 @@ function NavCompo({
   return (
     <nav
       className={CalendarCVA({
-        nav: size,
+        nav_row: size,
         className: classNames?.[`${size}_nav_row`],
       })}
     >
@@ -191,7 +194,7 @@ function NavCompo({
       <div
         className={CalendarCVA({
           nav_button_container: size,
-          className: classNames?.[`${size}_nav_button_grid`],
+          className: classNames?.[`${size}_nav_button_container`],
         })}
       >
         <button
@@ -223,12 +226,12 @@ const HeadCompo = React.memo(function Days({ size, classNames }) {
   return (
     <div
       className={CalendarCVA({
-        header: size,
+        days_row: size,
         className: classNames?.[`${size}_days_row`],
       })}
     >
-      {DAYS.map((day) => (
-        <span key={day} className={classNames?.[`${size}_days_content`]}>
+      {_DAYS.map((day) => (
+        <span key={day} className={classNames?.[`${size}_day_value`]}>
           {dayjs()
             .day(day)
             .format(size === "sm" ? "dd" : "ddd")}
@@ -281,10 +284,11 @@ function TableCompo({
             className={[
               CellCVA({
                 cell: size,
-                isSameMonth: isSameMonth,
-                isSelectDay: selectDay?.isSame(day, "day"),
-                isToday: isToday,
+                cell_isSameMonth: isSameMonth,
+                cell_isSelectDay: selectDay?.isSame(day, "day"),
+                cell_isToday: isToday,
               }),
+              classNames?.[`${size}_cell`],
               isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
               selectDay?.isSame(day, "day") &&
                 classNames?.[`${size}_cell_isSelectDay`],
@@ -316,12 +320,12 @@ function TableCompo({
                       {key} : {value}
                       <br />
                     </React.Fragment>
-                  )),
+                  ))
                 )}
               </p>
             )}
           </li>
-        ),
+        )
       );
       day = day.add(1, "day");
     }
@@ -340,21 +344,21 @@ function TableCompo({
         if (!targetLi) return;
         const parsedDay = dayjs(
           targetLi.dataset.id,
-          contents?.format ?? identiFormat,
+          contents?.format ?? identiFormat
         );
         onChangeSelectDay(parsedDay);
 
         if (
           !contents?.values ||
           !contents.values.get(
-            parsedDay.format(contents?.format ?? identiFormat),
+            parsedDay.format(contents?.format ?? identiFormat)
           )
         )
           return;
 
         onClickDayHandler(
           contents?.values,
-          parsedDay.format(contents?.format ?? identiFormat),
+          parsedDay.format(contents?.format ?? identiFormat)
         );
       }}
     >
@@ -367,7 +371,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
   return (
     <svg
       className={svgCVA({
-        svg: size,
+        nav_button_svg: size,
         className: classNames?.[`${size}_nav_button_svg`],
       })}
       viewBox="0 0 35 35"
@@ -378,8 +382,8 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
           id="Vector"
           d="M21.5 25.5L13.5 18L21.5 10.5"
           className={svgCVA({
-            path: size,
-            className: classNames?.[`${size}_nav_button_path`],
+            nav_button_svg_path: size,
+            className: classNames?.[`${size}_nav_button_svg_path`],
           })}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -393,7 +397,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
   return (
     <svg
       className={svgCVA({
-        svg: size,
+        nav_button_svg: size,
         className: classNames?.[`${size}_nav_button_svg`],
       })}
       viewBox="0 0 35 35"
@@ -404,8 +408,8 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
           id="Vector"
           d="M13.5 25.5L21.5 18L13.5 10.5"
           className={svgCVA({
-            path: size,
-            className: classNames?.[`${size}_nav_button_path`],
+            nav_button_svg_path: size,
+            className: classNames?.[`${size}_nav_button_svg_path`],
           })}
           strokeLinecap="round"
           strokeLinejoin="round"

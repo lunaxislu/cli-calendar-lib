@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { cva } from "class-variance-authority";
 import { cn } from "./utils";
 
@@ -112,10 +112,8 @@ const Calendar = ({
   identiFormat = "YYYY. MM. DD", // 기본 포맷 제공
   cellDateFormat = "D", // 기본 날짜 렌더링 포맷
 }) => {
-  const [currentDate, setCurrentDate] =
-    useState < Dayjs > (defaultDate ?? dayjs());
-  const [selectDay, setSelectDay] =
-    (useState < Dayjs) | (null > (defaultSelectDate ?? null));
+  const [currentDate, setCurrentDate] = useState(defaultDate ?? dayjs());
+  const [selectDay, setSelectDay] = useState(defaultSelectDate ?? null);
   const setUpdateDate = defaultSetDate ?? setCurrentDate;
   const setUpdateSelectDate = defaultSetSelectDate ?? setSelectDay;
 
