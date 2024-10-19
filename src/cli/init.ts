@@ -47,7 +47,7 @@ export const init = new Command()
       if (!projectInfo) {
         return logger.error(
           "you must install packageManager : npm , pnpm or yarn",
-          process.exit(1),
+          process.exit(1)
         );
       }
 
@@ -85,7 +85,7 @@ export const init = new Command()
 
         if (!isTailwindInstalled) {
           const tailwindSpinner = loading(
-            "Tailwind is not installed. Installing Tailwind...",
+            "Tailwind is not installed. Installing Tailwind..."
           ).start();
 
           await execa(
@@ -96,7 +96,7 @@ export const init = new Command()
               "postcss",
               "autoprefixer",
             ],
-            { cwd, stdio: "inherit" },
+            { cwd, stdio: "inherit" }
           );
           tailwindSpinner.succeed("Tailwind installed successfully.");
         }
@@ -106,7 +106,7 @@ export const init = new Command()
         if (!tailwindConfigPath) {
           logger.info("No tailwind.config file found. Creating one...");
           const tailwindConfigSpinner = loading(
-            "Creating Tailwind config...",
+            "Creating Tailwind config..."
           ).start();
 
           if (packageManager === "npm") {
@@ -141,13 +141,13 @@ export const init = new Command()
 
         // isSrcDir 값에 따라 src 경로 또는 기본 경로 추가
         if (projectInfo.isSrcDir) {
-          contentPaths.push("./src/components/**/*.{js,ts,jsx,tsx,mdx}");
+          contentPaths.push("./src/**/*.{js,ts,jsx,tsx}");
         }
 
         // Tailwind 설정 파일을 업데이트하는 함수 호출
         await updateWithTsmorphToTailwindConfig(
           tailwindConfigPath,
-          contentPaths,
+          contentPaths
         );
         logger.success("Checked/Updated Tailwind config content.");
 
@@ -160,15 +160,15 @@ export const init = new Command()
 
         if (!isTailwindMergeInstalled) {
           const tailwindMergeSpinner = loading(
-            "Installing tailwind-merge...",
+            "Installing tailwind-merge..."
           ).start();
           await execa(
             packageManager,
             [packageManager === "npm" ? "install" : "add", "tailwind-merge"],
-            { cwd, stdio: "inherit" },
+            { cwd, stdio: "inherit" }
           );
           tailwindMergeSpinner.succeed(
-            "tailwind-merge installed successfully.",
+            "tailwind-merge installed successfully."
           );
         } else {
           logger.success("tailwind-merge is already installed.");
@@ -194,7 +194,7 @@ export const init = new Command()
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", `dayjs`],
-          { cwd, stdio: "inherit" },
+          { cwd, stdio: "inherit" }
         );
         dayjsSpinner.succeed("Day.js installed.");
       } else {
@@ -209,7 +209,7 @@ export const init = new Command()
 
         if (!isCssModulesTypesInstalled) {
           const cssModulesSpinner = loading(
-            "Installing @types/css-modules...",
+            "Installing @types/css-modules..."
           ).start();
           try {
             const installCommand =
@@ -243,7 +243,7 @@ export const init = new Command()
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", "clsx"],
-          { cwd, stdio: "inherit" },
+          { cwd, stdio: "inherit" }
         );
         clsxSpinner.succeed("clsx installed successfully.");
       } else if (isClsxInstalled && styleChoice === "Tailwind") {
@@ -252,7 +252,7 @@ export const init = new Command()
 
       if (!isCvaInstalled) {
         const cvaSpinner = loading(
-          "Installing class-variance-authority...",
+          "Installing class-variance-authority..."
         ).start();
         await execa(
           packageManager,
@@ -260,7 +260,7 @@ export const init = new Command()
             packageManager === "npm" ? "install" : "add",
             "class-variance-authority",
           ],
-          { cwd, stdio: "inherit" },
+          { cwd, stdio: "inherit" }
         );
         cvaSpinner.succeed("class-variance-authority installed successfully.");
       } else {
@@ -324,7 +324,7 @@ export const init = new Command()
       await fs.writeFile(
         moduleJsonPath,
         JSON.stringify(moduleJson, null, 2),
-        "utf8",
+        "utf8"
       );
       logger.success(`module.json has been created at ${moduleJsonPath}`);
     } catch (error) {
