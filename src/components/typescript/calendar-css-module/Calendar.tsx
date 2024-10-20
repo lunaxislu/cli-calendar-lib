@@ -11,7 +11,7 @@ type CalendarValues<T extends DateItem> = Map<
   FormattedDateItem<T>[]
 >;
 type CalendarStyles = VariantProps<typeof calendarVariance> &
-  VariantProps<typeof CellCVA> &
+  VariantProps<typeof cellVariance> &
   VariantProps<typeof svgVariance> &
   VariantProps<typeof buttonVariance>;
 type ClassNames = Partial<{
@@ -80,8 +80,7 @@ const calendarVariance = cva(styles["base-style"], {
     },
   },
 });
-
-const CellCVA = cva("", {
+const cellVariance = cva("", {
   variants: {
     cell: {
       sm: styles["sm-cell"],
@@ -129,6 +128,19 @@ const CellCVA = cva("", {
     },
   ],
 });
+/**
+ * 
+ * @param defaultSetDate
+ * @param defaultSetSelectDate
+ * @example Redux,setState, ... other...
+ * const dispatch = useDispatch();
+  const if_Use_Redux = (value:Dayjs)=>dispatch(setState(value))
+   <Calendar
+        defaultSetDate={if_Use_Redux}
+        defaultSetSelectDate={if_Use_Redux}
+      />
+ * @returns 
+ */
 const Calendar = <T extends DateItem>({
   defaultDate,
   defaultSelectDate,
@@ -431,7 +443,7 @@ const Cell = function Cell<T extends DateItem>({
 
   const generateCellClasses = () =>
     [
-      CellCVA({
+      cellVariance({
         cell: size,
         cell_isSameMonth: isSameMonth,
         cell_isSelectDay: selectDay?.isSame(day, "day"),
@@ -466,7 +478,7 @@ const Cell = function Cell<T extends DateItem>({
 
       {value.length > 0 && (
         <p
-          className={CellCVA({
+          className={cellVariance({
             cell_value: size,
             className: classNames?.[`${size}_cell_value`],
           })}

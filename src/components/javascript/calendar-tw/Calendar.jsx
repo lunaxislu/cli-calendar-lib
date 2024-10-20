@@ -99,7 +99,19 @@ const cellVariance = cva("", {
     },
   ],
 });
-
+/**
+ * 
+ * @param defaultSetDate
+ * @param defaultSetSelectDate
+ * @example Redux,setState, ... other...
+ * const dispatch = useDispatch();
+  const if_Use_Redux = (value:Dayjs)=>dispatch(setState(value))
+   <Calendar
+        defaultSetDate={if_Use_Redux}
+        defaultSetSelectDate={if_Use_Redux}
+      />
+ * @returns 
+ */
 const Calendar = ({
   defaultDate,
   defaultSelectDate,
