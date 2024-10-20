@@ -10,10 +10,10 @@ type CalendarValues<T extends DateItem> = Map<
   dayjs.FormatObject["format"],
   FormattedDateItem<T>[]
 >;
-type CalendarStyles = VariantProps<typeof CalendarCVA> &
+type CalendarStyles = VariantProps<typeof calendarVariance> &
   VariantProps<typeof CellCVA> &
-  VariantProps<typeof svgCVA> &
-  VariantProps<typeof buttonCVA>;
+  VariantProps<typeof svgVariance> &
+  VariantProps<typeof buttonVariance>;
 type ClassNames = Partial<{
   [K in keyof CalendarStyles as `sm_${K}` | `lg_${K}`]: string;
 }>;
@@ -26,7 +26,7 @@ type StateSetter<T> =
 const DISPLAY_FORMAT = "YYYY. MM. DD";
 const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
-const svgCVA = cva(styles["svg-base-reset"], {
+const svgVariance = cva(styles["svg-base-reset"], {
   variants: {
     nav_button_svg: {
       sm: styles["sm-nav-svg"],
@@ -38,7 +38,7 @@ const svgCVA = cva(styles["svg-base-reset"], {
     },
   },
 });
-const buttonCVA = cva(styles["button-base-reset"], {
+const buttonVariance = cva(styles["button-base-reset"], {
   variants: {
     nav_button: {
       sm: styles["sm-nav-button"],
@@ -50,7 +50,7 @@ const buttonCVA = cva(styles["button-base-reset"], {
     },
   },
 });
-const CalendarCVA = cva(styles["base-style"], {
+const calendarVariance = cva(styles["base-style"], {
   variants: {
     calendar_grid: {
       sm: styles["sm-calendar-grid"],
@@ -197,8 +197,9 @@ const Calendar = <T extends DateItem>({
 
   return (
     <div
-      className={CalendarCVA({
+      className={calendarVariance({
         calendar_grid: size,
+        // calendar_grid
         className: classNames?.[`${size}_calendar_grid`],
       })}
     >
@@ -239,21 +240,24 @@ const NavCompo = React.memo(function NavCompo({
   size: "sm" | "lg";
 }) {
   return (
+    // nav_row
     <nav
-      className={CalendarCVA({
+      className={calendarVariance({
         nav_row: size,
         className: classNames?.[`${size}_nav_row`],
       })}
     >
       {currentDate.format("MMMM YYYY")}
+      {/**nav_button_container*/}
       <div
-        className={CalendarCVA({
+        className={calendarVariance({
           nav_button_container: size,
           className: classNames?.[`${size}_nav_button_container`],
         })}
       >
+        {/* nav_button  */}
         <button
-          className={buttonCVA({
+          className={buttonVariance({
             nav_button: size,
             className: classNames?.[`${size}_nav_button`],
           })}
@@ -262,14 +266,16 @@ const NavCompo = React.memo(function NavCompo({
         >
           <ArrowLeft size={size} classNames={classNames} />
         </button>
+        {/* nav_button */}
         <button
-          className={buttonCVA({
+          className={buttonVariance({
             nav_button: size,
             className: classNames?.[`${size}_nav_button`],
           })}
           type="button"
           onClick={clickNextMonthHandler}
         >
+          {/* nav_button_svg */}
           <ArrowRight size={size} classNames={classNames} />
         </button>
       </div>
@@ -286,12 +292,14 @@ const HeadCompo = React.memo(function HeadCompo({
 }) {
   return (
     <div
-      className={CalendarCVA({
+      className={calendarVariance({
         days_row: size,
+        // days_row
         className: classNames?.[`${size}_days_row`],
       })}
     >
       {WEEK_DAYS.map((day) => (
+        // day_value
         <span key={day} className={classNames?.[`${size}_day_value`]}>
           {dayjs()
             .day(day)
@@ -382,7 +390,8 @@ const TableCompo = function TableCompo<T extends DateItem>({
   }
   return (
     <ul
-      className={CalendarCVA({
+      //table
+      className={calendarVariance({
         table: size,
         className: classNames?.[`${size}_table`],
       })}
@@ -447,7 +456,7 @@ const Cell = function Cell<T extends DateItem>({
     <li onClick={handleClick} className={generateCellClasses()}>
       <button
         type="button"
-        className={buttonCVA({
+        className={buttonVariance({
           cell_button: size,
           className: classNames?.[`${size}_cell_button`],
         })}
@@ -478,7 +487,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
 }) {
   return (
     <svg
-      className={svgCVA({
+      className={svgVariance({
         nav_button_svg: size,
         className: classNames?.[`${size}_nav_button_svg`],
       })}
@@ -489,7 +498,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
         <path
           id="Vector"
           d="M21.5 25.5L13.5 18L21.5 10.5"
-          className={svgCVA({
+          className={svgVariance({
             nav_button_svg_path: size,
             className: classNames?.[`${size}_nav_button_svg_path`],
           })}
@@ -510,7 +519,7 @@ const ArrowRight = React.memo(function ArrowRight({
 }) {
   return (
     <svg
-      className={svgCVA({
+      className={svgVariance({
         nav_button_svg: size,
         className: classNames?.[`${size}_nav_button_svg`],
       })}
@@ -521,7 +530,7 @@ const ArrowRight = React.memo(function ArrowRight({
         <path
           id="Vector"
           d="M13.5 25.5L21.5 18L13.5 10.5"
-          className={svgCVA({
+          className={svgVariance({
             nav_button_svg_path: size,
             className: classNames?.[`${size}_nav_button_svg_path`],
           })}

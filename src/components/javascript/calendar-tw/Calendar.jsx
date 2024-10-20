@@ -5,7 +5,7 @@ import { cn } from "./utils";
 
 const DISPLAY_FORMAT = "YYYY. MM. DD";
 const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
-const svgCVA = cva("fill-none", {
+const svgVariance = cva("fill-none", {
   variants: {
     nav_button_svg: {
       sm: "w-5 h-5",
@@ -17,7 +17,7 @@ const svgCVA = cva("fill-none", {
     },
   },
 });
-const buttonCVA = cva(
+const buttonVariance = cva(
   "p-0 m-0 bg-transparent border-none outline-none appearance-none  focus:outline-none cursor-pointer",
   {
     variants: {
@@ -32,7 +32,7 @@ const buttonCVA = cva(
     },
   }
 );
-const CalendarCVA = cva("", {
+const calendarVariance = cva("", {
   variants: {
     calendar_grid: {
       sm: "grid grid-cols-[max-content] w-[max-content] gap-y-3 p-4 bg-black grid-rows-[1fr_1fr_auto] rounded-xl border-2 border-[#bbb] text-white",
@@ -62,7 +62,7 @@ const CalendarCVA = cva("", {
   },
 });
 
-const CellCVA = cva("", {
+const cellVariance = cva("", {
   variants: {
     cell: {
       sm: "relative flex justify-center w-8 h-8 rounded-[10px] opacity-50 cursor-pointer hover:transition-colors hover:duration-[0.3s] hover:bg-neutral-900 hover:text-[#bbb]",
@@ -147,8 +147,9 @@ const Calendar = ({
   return (
     <div
       className={cn(
-        CalendarCVA({
+        calendarVariance({
           calendar_grid: size,
+          // calendar_grid
           className: classNames?.[`${size}_calendar_grid`],
         })
       )}
@@ -187,22 +188,22 @@ const NavCompo = React.memo(function NavCompo({
     // nav row
     <nav
       className={cn(
-        CalendarCVA({ nav_row: size }),
+        calendarVariance({ nav_row: size }),
         classNames?.[`${size}_nav_row`]
       )}
     >
       {currentDate.format("MMMM YYYY")}
-      {/**nav_button_grid */}
+      {/**nav_button_container*/}
       <div
         className={cn(
-          CalendarCVA({ nav_button_container: size }),
+          calendarVariance({ nav_button_container: size }),
           classNames?.[`${size}_nav_button_container`]
         )}
       >
-        {/* nav_button & nav_button_previous */}
+        {/* nav_button */}
         <button
           className={cn(
-            buttonCVA({ nav_button: size }),
+            buttonVariance({ nav_button: size }),
             classNames?.[`${size}_nav_button`]
           )}
           type="button"
@@ -211,10 +212,10 @@ const NavCompo = React.memo(function NavCompo({
           {/* nav_button_svg */}
           <ArrowLeft classNames={classNames} size={size} />
         </button>
-        {/* nav_button & nav_button_next */}
+        {/* nav_button */}
         <button
           className={cn(
-            buttonCVA({ nav_button: size }),
+            buttonVariance({ nav_button: size }),
             classNames?.[`${size}_nav_button`]
           )}
           type="button"
@@ -232,9 +233,10 @@ const HeadCompo = React.memo(function HeadCompo({ size, classNames }) {
   return (
     <header
       className={cn(
-        CalendarCVA({
+        calendarVariance({
           days_row: size,
         }),
+        // days_row
         classNames?.[`${size}_days_row`]
       )}
     >
@@ -242,7 +244,8 @@ const HeadCompo = React.memo(function HeadCompo({ size, classNames }) {
         <span
           key={day}
           className={cn(
-            CalendarCVA({ day_value: size }),
+            // day_value
+            calendarVariance({ day_value: size }),
             classNames?.[`${size}_day_value`]
           )}
         >
@@ -316,7 +319,8 @@ const TableCompo = function TableCompo({
   return (
     <ul
       className={cn(
-        CalendarCVA({ table: size }),
+        //table
+        calendarVariance({ table: size }),
         classNames?.[`${size}_table`]
       )}
     >
@@ -341,7 +345,7 @@ const Cell = function Cell({
     if (value.length > 0) onClickDayHandler?.(value);
   };
   const generateCellClasses = cn(
-    CellCVA({
+    cellVariance({
       cell: size,
       cell_isSameMonth: isSameMonth,
       cell_isToday: isToday,
@@ -364,7 +368,7 @@ const Cell = function Cell({
       <button
         type="button"
         className={cn(
-          buttonCVA({ cell_button: size }),
+          buttonVariance({ cell_button: size }),
           classNames?.[`${size}_cell_button`]
         )}
       >
@@ -372,7 +376,7 @@ const Cell = function Cell({
       </button>
       {value.length > 0 && (
         <p
-          className={CellCVA({
+          className={cellVariance({
             cell_value: size,
             className: classNames?.[`${size}_cell_value`],
           })}
@@ -387,7 +391,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
   return (
     <svg
       className={cn(
-        svgCVA({ nav_button_svg: size }),
+        svgVariance({ nav_button_svg: size }),
         classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
@@ -400,7 +404,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           className={cn(
-            svgCVA({ nav_button_svg_path: size }),
+            svgVariance({ nav_button_svg_path: size }),
             classNames?.[`${size}_nav_button_svg_path`]
           )}
         />
@@ -413,7 +417,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
   return (
     <svg
       className={cn(
-        svgCVA({ nav_button_svg: size }),
+        svgVariance({ nav_button_svg: size }),
         classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
@@ -426,7 +430,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           className={cn(
-            svgCVA({ nav_button_svg_path: size }),
+            svgVariance({ nav_button_svg_path: size }),
             classNames?.[`${size}_nav_button_svg_path`]
           )}
         />
