@@ -55,7 +55,7 @@ yarn add cli-custom-calendar
 ```bash
 npx cli-calendar init
 #or
-yarn, pnpm add cli-calendar init
+yarn, pnpm cli-calendar init
 ```
 
 During initialization, you'll be prompted to: <br>

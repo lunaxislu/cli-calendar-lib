@@ -17,8 +17,12 @@ type CalendarStyles = VariantProps<typeof CalendarCVA> &
 type ClassNames = Partial<{
   [K in keyof CalendarStyles as `sm_${K}` | `lg_${K}`]: string;
 }>;
-
 type GroupedDateItems<T extends DateItem> = CalendarValues<T>;
+// Dispatch : Redux, setState, Recoid, zustand, others...
+type StateSetter<T> =
+  | React.Dispatch<React.SetStateAction<T>>
+  | ((value: T) => void);
+
 const DISPLAY_FORMAT = "YYYY. MM. DD";
 const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -127,24 +131,24 @@ const CellCVA = cva("", {
 });
 const Calendar = <T extends DateItem>({
   defaultDate,
-  defaultSetDate,
   defaultSelectDate,
-  classNames,
+  defaultSetDate,
   defaultSetSelectDate,
+  classNames,
   onClickHandler,
   size = "sm",
   render,
   values,
-  cellDateFormat = "D", // 기본 날짜 렌더링 포맷
+  cellDateFormat = "D", // default Render Cell Format
 }: {
-  defaultDate?: Dayjs;
+  defaultDate?: dayjs.Dayjs;
+  defaultSelectDate?: dayjs.Dayjs | null;
+  defaultSetDate?: StateSetter<Dayjs>;
+  defaultSetSelectDate?: StateSetter<Dayjs | null>;
+  onClickHandler?: (value: FormattedDateItem<T>[]) => void;
   classNames?: ClassNames;
   size?: "sm" | "lg";
   values?: T[];
-  defaultSetDate?: React.Dispatch<React.SetStateAction<Dayjs>>;
-  defaultSetSelectDate?: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-  defaultSelectDate?: Dayjs | null;
-  onClickHandler?: (value: FormattedDateItem<T>[]) => void;
   cellDateFormat?: string;
   render?: (props: {
     selectDay: Dayjs | null;
@@ -159,12 +163,14 @@ const Calendar = <T extends DateItem>({
     classNames?: ClassNames;
   }) => JSX.Element;
 }) => {
-  const [currentDate, setCurrentDate] = useState<Dayjs>(defaultDate ?? dayjs());
-  const [selectDay, setSelectDay] = useState<Dayjs | null>(
-    defaultSelectDate ?? null,
-  );
-  const setUpdateDate = defaultSetDate ?? setCurrentDate;
-  const setUpdateSelectDate = defaultSetSelectDate ?? setSelectDay;
+  const [date, setDate] = useState<Dayjs>(dayjs());
+  const [originSelectDate, setOriginSelectDate] = useState<Dayjs | null>(null);
+  const currentDate = defaultDate ?? date;
+  const selectDate =
+    defaultSelectDate !== undefined ? defaultSelectDate : originSelectDate;
+  const setUpdateDate = defaultSetDate ?? setDate;
+
+  const setUpdateSelectDate = defaultSetSelectDate ?? setOriginSelectDate;
   const displayValues = useMemo(() => formattedByDate(values ?? []), [values]);
   const clickPreMonthHandler = useCallback(() => {
     setUpdateDate(currentDate.subtract(1, "month"));
@@ -179,14 +185,14 @@ const Calendar = <T extends DateItem>({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values],
+    [values]
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day: Dayjs) => {
-      setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
+      setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-    [selectDay, setUpdateSelectDate],
+    [selectDate, setUpdateSelectDate]
   );
 
   return (
@@ -209,7 +215,7 @@ const Calendar = <T extends DateItem>({
         classNames={classNames}
         size={size}
         currentDate={currentDate}
-        selectDay={selectDay}
+        selectDay={selectDate}
         onClickDayHandler={onClickDayHandler}
         onChangeSelectDay={onChangeSelectDay}
         render={render}
@@ -369,7 +375,7 @@ const TableCompo = function TableCompo<T extends DateItem>({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        ),
+        )
       );
       day = day.add(1, "day");
     }
@@ -528,13 +534,13 @@ const ArrowRight = React.memo(function ArrowRight({
 });
 function formattedByDate<T extends DateItem>(
   array: T[],
-  format: string = DISPLAY_FORMAT,
+  format: string = DISPLAY_FORMAT
 ): GroupedDateItems<T> | null {
   if (array.length === 0) return null;
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
       );
     const dateKey = isValidDate(cur.date, format);
 
@@ -552,7 +558,7 @@ function formattedByDate<T extends DateItem>(
 
 function isValidDate(
   date: ConfigType,
-  format: string = DISPLAY_FORMAT,
+  format: string = DISPLAY_FORMAT
 ): string | null {
   if (typeof date === "number") {
     const parsedDate = date > 9999999999 ? dayjs(date) : dayjs.unix(date);

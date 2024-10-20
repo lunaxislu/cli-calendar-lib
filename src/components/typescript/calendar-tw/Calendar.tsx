@@ -19,6 +19,10 @@ type ClassNames = Partial<{
 }>;
 
 type GroupedDateItems<T extends DateItem> = CalendarValues<T>;
+// Dispatch : Redux, setState, Recoid, zustand, others...
+type StateSetter<T> =
+  | React.Dispatch<React.SetStateAction<T>>
+  | ((value: T) => void);
 const DISPLAY_FORMAT = "YYYY. MM. DD";
 const WEEK_DAYS = [0, 1, 2, 3, 4, 5, 6];
 const svgCVA = cva("fill-none", {
@@ -46,7 +50,7 @@ const buttonCVA = cva(
         lg: "text-sm",
       },
     },
-  },
+  }
 );
 const CalendarCVA = cva("", {
   variants: {
@@ -77,7 +81,6 @@ const CalendarCVA = cva("", {
     },
   },
 });
-
 const CellCVA = cva("", {
   variants: {
     cell: {
@@ -115,27 +118,39 @@ const CellCVA = cva("", {
     },
   ],
 });
-
+/**
+ * 
+ * @param defaultSetDate
+ * @param defaultSetSelectDate
+ * @example Redux,setState, ... other...
+ * const dispatch = useDispatch();
+  const if_Use_Redux = (value:Dayjs)=>dispatch(setState(value))
+   <Calendar
+        defaultSetDate={if_Use_Redux}
+        defaultSetSelectDate={if_Use_Redux}
+      />
+ * @returns 
+ */
 const Calendar = <T extends DateItem>({
   defaultDate,
-  defaultSetDate,
   defaultSelectDate,
-  classNames,
+  defaultSetDate,
   defaultSetSelectDate,
+  classNames,
   onClickHandler,
   size = "sm",
   render,
   values,
-  cellDateFormat = "D", // 기본 날짜 렌더링 포맷
+  cellDateFormat = "D", // default Render Cell Format
 }: {
-  defaultDate?: Dayjs;
+  defaultDate?: dayjs.Dayjs;
+  defaultSelectDate?: dayjs.Dayjs | null;
+  defaultSetDate?: StateSetter<Dayjs>;
+  defaultSetSelectDate?: StateSetter<Dayjs | null>;
+  onClickHandler?: (value: FormattedDateItem<T>[]) => void;
   classNames?: ClassNames;
   size?: "sm" | "lg";
   values?: T[];
-  defaultSetDate?: React.Dispatch<React.SetStateAction<Dayjs>>;
-  defaultSetSelectDate?: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-  defaultSelectDate?: Dayjs | null;
-  onClickHandler?: (value: FormattedDateItem<T>[]) => void;
   cellDateFormat?: string;
   render?: (props: {
     selectDay: Dayjs | null;
@@ -150,12 +165,14 @@ const Calendar = <T extends DateItem>({
     classNames?: ClassNames;
   }) => JSX.Element;
 }) => {
-  const [currentDate, setCurrentDate] = useState<Dayjs>(defaultDate ?? dayjs());
-  const [selectDay, setSelectDay] = useState<Dayjs | null>(
-    defaultSelectDate ?? null,
-  );
-  const setUpdateDate = defaultSetDate ?? setCurrentDate;
-  const setUpdateSelectDate = defaultSetSelectDate ?? setSelectDay;
+  const [date, setDate] = useState<Dayjs>(dayjs());
+  const [originSelectDate, setOriginSelectDate] = useState<Dayjs | null>(null);
+  const currentDate = defaultDate ?? date;
+  const selectDate =
+    defaultSelectDate !== undefined ? defaultSelectDate : originSelectDate;
+  const setUpdateDate = defaultSetDate ?? setDate;
+
+  const setUpdateSelectDate = defaultSetSelectDate ?? setOriginSelectDate;
   const displayValues = useMemo(() => formattedByDate(values ?? []), [values]);
   const clickPreMonthHandler = useCallback(() => {
     setUpdateDate(currentDate.subtract(1, "month"));
@@ -170,14 +187,14 @@ const Calendar = <T extends DateItem>({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values],
+    [values]
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day: Dayjs) => {
-      setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
+      setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-    [selectDay, setUpdateSelectDate],
+    [selectDate, setUpdateSelectDate]
   );
 
   return (
@@ -186,7 +203,7 @@ const Calendar = <T extends DateItem>({
         CalendarCVA({
           calendar_grid: size,
           className: classNames?.[`${size}_calendar_grid`],
-        }),
+        })
       )}
     >
       <NavCompo
@@ -202,7 +219,7 @@ const Calendar = <T extends DateItem>({
         classNames={classNames}
         size={size}
         currentDate={currentDate}
-        selectDay={selectDay}
+        selectDay={selectDate}
         onClickDayHandler={onClickDayHandler}
         onChangeSelectDay={onChangeSelectDay}
         render={render}
@@ -230,7 +247,7 @@ const NavCompo = React.memo(function NavCompo({
     <nav
       className={cn(
         CalendarCVA({ nav_row: size }),
-        classNames?.[`${size}_nav_row`],
+        classNames?.[`${size}_nav_row`]
       )}
     >
       {currentDate.format("MMMM YYYY")}
@@ -238,14 +255,14 @@ const NavCompo = React.memo(function NavCompo({
       <div
         className={cn(
           CalendarCVA({ nav_button_container: size }),
-          classNames?.[`${size}_nav_button_container`],
+          classNames?.[`${size}_nav_button_container`]
         )}
       >
         {/* nav_button & nav_button_previous */}
         <button
           className={cn(
             buttonCVA({ nav_button: size }),
-            classNames?.[`${size}_nav_button`],
+            classNames?.[`${size}_nav_button`]
           )}
           type="button"
           onClick={clickPreMonthHandler}
@@ -257,7 +274,7 @@ const NavCompo = React.memo(function NavCompo({
         <button
           className={cn(
             buttonCVA({ nav_button: size }),
-            classNames?.[`${size}_nav_button`],
+            classNames?.[`${size}_nav_button`]
           )}
           type="button"
           onClick={clickNextMonthHandler}
@@ -283,7 +300,7 @@ const HeadCompo = React.memo(function HeadCompo({
         CalendarCVA({
           days_row: size,
         }),
-        classNames?.[`${size}_days_row`],
+        classNames?.[`${size}_days_row`]
       )}
     >
       {WEEK_DAYS.map((day) => (
@@ -291,7 +308,7 @@ const HeadCompo = React.memo(function HeadCompo({
           key={day}
           className={cn(
             CalendarCVA({ day_value: size }),
-            classNames?.[`${size}_day_value`],
+            classNames?.[`${size}_day_value`]
           )}
         >
           {dayjs()
@@ -376,7 +393,7 @@ const TableCompo = function TableCompo<T extends DateItem>({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        ),
+        )
       );
       day = day.add(1, "day");
     }
@@ -386,7 +403,7 @@ const TableCompo = function TableCompo<T extends DateItem>({
     <ul
       className={cn(
         CalendarCVA({ table: size }),
-        classNames?.[`${size}_table`],
+        classNames?.[`${size}_table`]
       )}
     >
       {dates}
@@ -430,7 +447,7 @@ const Cell = function Cell<T extends DateItem>({
     classNames?.[`${size}_cell`],
     isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
     selectDay?.isSame(day, "day") && classNames?.[`${size}_cell_isSelectDay`],
-    isToday && classNames?.[`${size}_cell_isToday`],
+    isToday && classNames?.[`${size}_cell_isToday`]
   );
   const renderValueItems = (val: FormattedDateItem<T>) =>
     Object.entries(val).map(([key, value]) => (
@@ -445,7 +462,7 @@ const Cell = function Cell<T extends DateItem>({
         type="button"
         className={cn(
           buttonCVA({ cell_button: size }),
-          classNames?.[`${size}_cell_button`],
+          classNames?.[`${size}_cell_button`]
         )}
       >
         {day.format(cellDateFormat)}
@@ -474,7 +491,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
     <svg
       className={cn(
         svgCVA({ nav_button_svg: size }),
-        classNames?.[`${size}_nav_button_svg`],
+        classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -487,7 +504,7 @@ const ArrowLeft = React.memo(function ArrowLeft({
           strokeLinejoin="round"
           className={cn(
             svgCVA({ nav_button_svg_path: size }),
-            classNames?.[`${size}_nav_button_svg_path`],
+            classNames?.[`${size}_nav_button_svg_path`]
           )}
         />
       </g>
@@ -506,7 +523,7 @@ const ArrowRight = React.memo(function ArrowRight({
     <svg
       className={cn(
         svgCVA({ nav_button_svg: size }),
-        classNames?.[`${size}_nav_button_svg`],
+        classNames?.[`${size}_nav_button_svg`]
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -519,7 +536,7 @@ const ArrowRight = React.memo(function ArrowRight({
           strokeLinejoin="round"
           className={cn(
             svgCVA({ nav_button_svg_path: size }),
-            classNames?.[`${size}_nav_button_svg_path`],
+            classNames?.[`${size}_nav_button_svg_path`]
           )}
         />
       </g>
@@ -528,13 +545,13 @@ const ArrowRight = React.memo(function ArrowRight({
 });
 function formattedByDate<T extends DateItem>(
   array: T[],
-  format: string = DISPLAY_FORMAT,
+  format: string = DISPLAY_FORMAT
 ): GroupedDateItems<T> | null {
   if (array.length === 0) return null;
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
       );
     const dateKey = isValidDate(cur.date, format);
 
@@ -552,7 +569,7 @@ function formattedByDate<T extends DateItem>(
 
 function isValidDate(
   date: ConfigType,
-  format: string = DISPLAY_FORMAT,
+  format: string = DISPLAY_FORMAT
 ): string | null {
   if (typeof date === "number") {
     const parsedDate = date > 9999999999 ? dayjs(date) : dayjs.unix(date);

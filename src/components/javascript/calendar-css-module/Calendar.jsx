@@ -111,20 +111,24 @@ const CellCVA = cva("", {
 });
 const Calendar = ({
   defaultDate,
-  defaultSetDate,
   defaultSelectDate,
-  classNames,
+  defaultSetDate,
   defaultSetSelectDate,
+  classNames,
   onClickHandler,
   size = "sm",
   render,
   values,
-  cellDateFormat = "D", // 기본 날짜 렌더링 포맷
+  cellDateFormat = "D", // default Render Cell Format
 }) => {
-  const [currentDate, setCurrentDate] = useState(defaultDate ?? dayjs());
-  const [selectDay, setSelectDay] = useState(defaultSelectDate ?? null);
-  const setUpdateDate = defaultSetDate ?? setCurrentDate;
-  const setUpdateSelectDate = defaultSetSelectDate ?? setSelectDay;
+  const [date, setDate] = useState(dayjs());
+  const [originSelectDate, setOriginSelectDate] = useState(null);
+  const currentDate = defaultDate ?? date;
+  const selectDate =
+    defaultSelectDate !== undefined ? defaultSelectDate : originSelectDate;
+  const setUpdateDate = defaultSetDate ?? setDate;
+
+  const setUpdateSelectDate = defaultSetSelectDate ?? setOriginSelectDate;
   const displayValues = useMemo(() => formattedByDate(values ?? []), [values]);
   const clickPreMonthHandler = useCallback(() => {
     setUpdateDate(currentDate.subtract(1, "month"));
@@ -139,17 +143,15 @@ const Calendar = ({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values],
+    [values]
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day) => {
-      setUpdateSelectDate(selectDay?.isSame(day, "d") ? null : day);
+      setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-
-    [selectDay, setUpdateSelectDate],
+    [selectDate, setUpdateSelectDate]
   );
-
   return (
     <div
       className={CalendarCVA({
@@ -170,7 +172,7 @@ const Calendar = ({
         classNames={classNames}
         size={size}
         currentDate={currentDate}
-        selectDay={selectDay}
+        selectDay={selectDate}
         onClickDayHandler={onClickDayHandler}
         onChangeSelectDay={onChangeSelectDay}
         render={render}
@@ -297,7 +299,7 @@ const TableCompo = function TableCompo({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        ),
+        )
       );
       day = day.add(1, "day");
     }
@@ -436,7 +438,7 @@ function formattedByDate(array, format = DISPLAY_FORMAT) {
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
       );
     const dateKey = isValidDate(cur.date, format);
 
