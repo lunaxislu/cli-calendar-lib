@@ -1,23 +1,10 @@
-# Demo
-
-```tsx
-<Calendar size="SMALL_SIZE" />
-```
-
-[![small.png](https://i.postimg.cc/jj3TvZKw/small.png)](https://postimg.cc/2qWgSd1r)
-
-```tsx
-<Calendar size="LARGE_SIZE" />
-```
-
-[![big-r.png](https://i.postimg.cc/hjJBYTPC/big-r.png)](https://postimg.cc/dkKpk7Cd)
-
 # Description
 
 > This library is for next.js and react only.
 
+- easily, Data mapping support
+- preset calendar
 - Customize the calendar component
-- Data mapping support
 - And more... do whatever you need
 
 This CLI automatically copies the calendar component files from the GitHub repository and places them in your project.
