@@ -300,7 +300,7 @@ export const init = new Command()
       );
       logger.success(`module.json has been created at ${moduleJsonPath}`);
       logger.break();
-      logger.info(`Now `);
+      logger.info(`Now you may add calendar component`);
     } catch (error) {
       spinner.fail("Failed to initialize the project");
       logger.error("Failed to initialize the project");
