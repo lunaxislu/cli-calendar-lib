@@ -11,7 +11,6 @@ import {
   updateWithTsmorphToTailwindConfig,
 } from "../util/get-project-info";
 import { logger } from "../util/logger";
-import { getPackageInfo, readPackageJson } from "../util/get-package-info";
 import inquirer from "inquirer";
 import { getCompatibleInfo } from "../util/get-compatible-info";
 import { handleError } from "../util/handle-error";

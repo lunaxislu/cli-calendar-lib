@@ -10,6 +10,10 @@
   "bin": {
     "cli-calendar": "./dist/index.js"
   },
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "build": "tsup"
   },
@@ -54,7 +58,6 @@
     "node-fetch": "^3.3.2",
     "ora": "^8.1.0",
     "prompts": "^2.4.2",
-    "semver": "^7.6.3",
     "ts-morph": "^23.0.0",
     "tsconfig-paths": "^4.2.0",
     "type-fest": "^4.26.0"
@@ -64,7 +67,6 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.5.4",
     "@types/prompts": "^2.4.9",
-    "@types/semver": "^7.5.8",
     "@types/unzipper": "^0.10.10",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
