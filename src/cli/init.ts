@@ -181,14 +181,11 @@ export const init = new Command()
 
         logger.info("Day.js is not installed. Installing...");
 
-        const dayjsSpinner = loading("Installing Day.js...").start();
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", `dayjs`],
           { cwd, stdio: "inherit" }
         );
-        dayjsSpinner.succeed("Day.js installed.");
-      } else {
         logger.success("Day.js is already installed.");
       }
 
@@ -273,7 +270,6 @@ export const init = new Command()
       /**
        * module.json write
        */
-      const packageInfo = getPackageInfo();
       // isTsx 값에 따라 'javascript' 또는 'typescript' 폴더를 선택
       const languageFolder = isTsx ? "typescript" : "javascript";
       // styleType 값에 따라 'calendar-css-module' 또는 'calendar-tw' 폴더를 선택
@@ -308,5 +304,6 @@ export const init = new Command()
     } catch (error) {
       spinner.fail("Failed to initialize the project");
       logger.error("Failed to initialize the project");
+      handleError(error);
     }
   });
