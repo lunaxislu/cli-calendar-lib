@@ -186,15 +186,20 @@ export const init = new Command()
 
       if (!currentDayjsVersion) {
         // Day.js가 없으면 설치
+
         logger.info("Day.js is not installed. Installing...");
 
         const dayjsSpinner = loading("Installing Day.js...").start();
-        await execa(
-          packageManager,
-          [packageManager === "npm" ? "install" : "add", `dayjs`],
-          { cwd, stdio: "inherit" },
-        );
-        dayjsSpinner.succeed("Day.js installed.");
+        try {
+          await execa(
+            packageManager,
+            [packageManager === "npm" ? "install" : "add", `dayjs`],
+            { cwd, stdio: "inherit" },
+          );
+          dayjsSpinner.succeed("Day.js installed.");
+        } catch (err) {
+          throw err;
+        }
       } else {
         logger.success("Day.js is already installed.");
       }
@@ -328,5 +333,6 @@ export const init = new Command()
     } catch (error) {
       spinner.fail("Failed to initialize the project");
       logger.error("Failed to initialize the project");
+      return;
     }
   });
