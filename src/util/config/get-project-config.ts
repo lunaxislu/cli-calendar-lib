@@ -22,7 +22,7 @@ const explorerEslint = cosmiconfig("eslint", {
     ".eslint.config.mjs",
     "eslint.config.cjs",
     ".eslint.config.cjs",
-    ".eslintr.mjs",
+    ".eslintrc.mjs",
     ".eslintrc.js",
   ],
 });
@@ -44,7 +44,7 @@ export async function getModuleConfig() {
 }
 
 export async function getEslintConfig(
-  config: ModuleConfig,
+  config: ModuleConfig
 ): Promise<Config | null> {
   if (config.isTsx) return null;
   try {

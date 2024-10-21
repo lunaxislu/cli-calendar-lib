@@ -1,5 +1,5 @@
 import { ModuleConfig } from "@/src/cli/init";
-import { cosmiconfig, CosmiconfigResult } from "cosmiconfig";
+import { cosmiconfig } from "cosmiconfig";
 import { logger } from "../logger";
 import path from "path";
 
@@ -25,7 +25,7 @@ export type Config = {
   filepath: string;
 };
 export async function getEslintConfig(
-  config: ModuleConfig,
+  config: ModuleConfig
 ): Promise<Config | null> {
   if (config.isTsx) return null;
   try {
@@ -42,7 +42,7 @@ export async function getEslintConfig(
       fileExtension,
     };
   } catch (err) {
-    logger.error("Cannot Resolve Eslint");
+    logger.error("Cannot get eslint config");
     return null;
   }
 }
