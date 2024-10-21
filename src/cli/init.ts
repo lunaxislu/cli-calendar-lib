@@ -178,13 +178,17 @@ export const init = new Command()
 
       if (!currentDayjsVersion) {
         // Day.js가 없으면 설치
+
         logger.info("Day.js is not installed. Installing...");
 
+        const dayjsSpinner = loading("Installing Day.js...").start();
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", `dayjs`],
           { cwd, stdio: "inherit" }
         );
+        dayjsSpinner.succeed("Day.js installed.");
+      } else {
         logger.success("Day.js is already installed.");
       }
 
@@ -303,6 +307,6 @@ export const init = new Command()
       logger.info(`Now `);
     } catch (error) {
       spinner.fail("Failed to initialize the project");
-      handleError(error);
+      logger.error("Failed to initialize the project");
     }
   });
