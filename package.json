@@ -10,9 +10,8 @@
   "bin": {
     "cli-calendar": "./dist/index.js"
   },
-  "private": true,
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "build": "tsup"
