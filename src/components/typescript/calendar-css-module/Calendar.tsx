@@ -197,14 +197,14 @@ const Calendar = <T extends DateItem>({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values]
+    [values],
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day: Dayjs) => {
       setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-    [selectDate, setUpdateSelectDate]
+    [selectDate, setUpdateSelectDate],
   );
 
   return (
@@ -395,7 +395,7 @@ const TableCompo = function TableCompo<T extends DateItem>({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        )
+        ),
       );
       day = day.add(1, "day");
     }
@@ -555,18 +555,20 @@ const ArrowRight = React.memo(function ArrowRight({
 });
 function formattedByDate<T extends DateItem>(
   array: T[],
-  format: string = DISPLAY_FORMAT
+  format: string = DISPLAY_FORMAT,
 ): GroupedDateItems<T> | null {
   if (array.length === 0) return null;
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
       );
     const dateKey = isValidDate(cur.date, format);
 
     if (!dateKey) {
-      throw new Error(`Invalid date: ${cur.date}`);
+      throw new Error(
+        `\nInvalid date: ${cur.date}.\nThe year in the date string should probably have at least 3 digits.\n(e.g. 'YYYY')`,
+      );
     }
 
     const newCur = { ...cur, date: dateKey };
@@ -579,7 +581,7 @@ function formattedByDate<T extends DateItem>(
 
 function isValidDate(
   date: ConfigType,
-  format: string = DISPLAY_FORMAT
+  format: string = DISPLAY_FORMAT,
 ): string | null {
   if (typeof date === "number") {
     const parsedDate = date > 9999999999 ? dayjs(date) : dayjs.unix(date);

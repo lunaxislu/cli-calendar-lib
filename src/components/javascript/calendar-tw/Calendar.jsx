@@ -30,7 +30,7 @@ const buttonVariance = cva(
         lg: "text-sm",
       },
     },
-  }
+  },
 );
 const calendarVariance = cva("", {
   variants: {
@@ -146,14 +146,14 @@ const Calendar = ({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values]
+    [values],
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day) => {
       setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-    [selectDate, setUpdateSelectDate]
+    [selectDate, setUpdateSelectDate],
   );
 
   return (
@@ -163,7 +163,7 @@ const Calendar = ({
           calendar_grid: size,
           // calendar_grid
           className: classNames?.[`${size}_calendar_grid`],
-        })
+        }),
       )}
     >
       <NavCompo
@@ -201,7 +201,7 @@ const NavCompo = React.memo(function NavCompo({
     <nav
       className={cn(
         calendarVariance({ nav_row: size }),
-        classNames?.[`${size}_nav_row`]
+        classNames?.[`${size}_nav_row`],
       )}
     >
       {currentDate.format("MMMM YYYY")}
@@ -209,14 +209,14 @@ const NavCompo = React.memo(function NavCompo({
       <div
         className={cn(
           calendarVariance({ nav_button_container: size }),
-          classNames?.[`${size}_nav_button_container`]
+          classNames?.[`${size}_nav_button_container`],
         )}
       >
         {/* nav_button */}
         <button
           className={cn(
             buttonVariance({ nav_button: size }),
-            classNames?.[`${size}_nav_button`]
+            classNames?.[`${size}_nav_button`],
           )}
           type="button"
           onClick={clickPreMonthHandler}
@@ -228,7 +228,7 @@ const NavCompo = React.memo(function NavCompo({
         <button
           className={cn(
             buttonVariance({ nav_button: size }),
-            classNames?.[`${size}_nav_button`]
+            classNames?.[`${size}_nav_button`],
           )}
           type="button"
           onClick={clickNextMonthHandler}
@@ -249,7 +249,7 @@ const HeadCompo = React.memo(function HeadCompo({ size, classNames }) {
           days_row: size,
         }),
         // days_row
-        classNames?.[`${size}_days_row`]
+        classNames?.[`${size}_days_row`],
       )}
     >
       {WEEK_DAYS.map((day) => (
@@ -258,7 +258,7 @@ const HeadCompo = React.memo(function HeadCompo({ size, classNames }) {
           className={cn(
             // day_value
             calendarVariance({ day_value: size }),
-            classNames?.[`${size}_day_value`]
+            classNames?.[`${size}_day_value`],
           )}
         >
           {dayjs()
@@ -322,7 +322,7 @@ const TableCompo = function TableCompo({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        )
+        ),
       );
       day = day.add(1, "day");
     }
@@ -333,7 +333,7 @@ const TableCompo = function TableCompo({
       className={cn(
         //table
         calendarVariance({ table: size }),
-        classNames?.[`${size}_table`]
+        classNames?.[`${size}_table`],
       )}
     >
       {dates}
@@ -366,7 +366,7 @@ const Cell = function Cell({
     classNames?.[`${size}_cell`],
     isSameMonth && classNames?.[`${size}_cell_isSameMonth`],
     selectDay?.isSame(day, "day") && classNames?.[`${size}_cell_isSelectDay`],
-    isToday && classNames?.[`${size}_cell_isToday`]
+    isToday && classNames?.[`${size}_cell_isToday`],
   );
   const renderValueItems = (val) =>
     Object.entries(val).map(([key, value]) => (
@@ -381,7 +381,7 @@ const Cell = function Cell({
         type="button"
         className={cn(
           buttonVariance({ cell_button: size }),
-          classNames?.[`${size}_cell_button`]
+          classNames?.[`${size}_cell_button`],
         )}
       >
         {day.format(cellDateFormat)}
@@ -404,7 +404,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
     <svg
       className={cn(
         svgVariance({ nav_button_svg: size }),
-        classNames?.[`${size}_nav_button_svg`]
+        classNames?.[`${size}_nav_button_svg`],
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -417,7 +417,7 @@ const ArrowLeft = React.memo(function ArrowLeft({ size, classNames }) {
           strokeLinejoin="round"
           className={cn(
             svgVariance({ nav_button_svg_path: size }),
-            classNames?.[`${size}_nav_button_svg_path`]
+            classNames?.[`${size}_nav_button_svg_path`],
           )}
         />
       </g>
@@ -430,7 +430,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
     <svg
       className={cn(
         svgVariance({ nav_button_svg: size }),
-        classNames?.[`${size}_nav_button_svg`]
+        classNames?.[`${size}_nav_button_svg`],
       )}
       viewBox="0 0 35 35"
       xmlns="http://www.w3.org/2000/svg"
@@ -443,7 +443,7 @@ const ArrowRight = React.memo(function ArrowRight({ size, classNames }) {
           strokeLinejoin="round"
           className={cn(
             svgVariance({ nav_button_svg_path: size }),
-            classNames?.[`${size}_nav_button_svg_path`]
+            classNames?.[`${size}_nav_button_svg_path`],
           )}
         />
       </g>
@@ -455,12 +455,14 @@ function formattedByDate(array, format = DISPLAY_FORMAT) {
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
       );
     const dateKey = isValidDate(cur.date, format);
 
     if (!dateKey) {
-      throw new Error(`Invalid date: ${cur.date}`);
+      throw new Error(
+        `\nInvalid date: ${cur.date}.\nThe year in the date string should probably have at least 3 digits.\n(e.g. 'YYYY')`,
+      );
     }
 
     const newCur = { ...cur, date: dateKey };

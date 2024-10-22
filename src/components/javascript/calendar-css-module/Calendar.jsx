@@ -156,14 +156,14 @@ const Calendar = ({
       if (!values) return;
       console.log("value : ", value);
     },
-    [values]
+    [values],
   );
   const onClickDayHandler = onClickHandler ?? defaultOnClickHandler;
   const onChangeSelectDay = useCallback(
     (day) => {
       setUpdateSelectDate(selectDate?.isSame(day, "d") ? null : day);
     },
-    [selectDate, setUpdateSelectDate]
+    [selectDate, setUpdateSelectDate],
   );
   return (
     <div
@@ -321,7 +321,7 @@ const TableCompo = function TableCompo({
             onChangeSelectDay={onChangeSelectDay}
             classNames={classNames}
           />
-        )
+        ),
       );
       day = day.add(1, "day");
     }
@@ -461,12 +461,14 @@ function formattedByDate(array, format = DISPLAY_FORMAT) {
   return array.reduce((acc, cur) => {
     if (!cur.date)
       throw new Error(
-        `Invalid date: ${cur.date}. Date cannot be null or undefined.`
+        `Invalid date: ${cur.date}. Date cannot be null or undefined.`,
       );
     const dateKey = isValidDate(cur.date, format);
 
     if (!dateKey) {
-      throw new Error(`Invalid date: ${cur.date}`);
+      throw new Error(
+        `\nInvalid date: ${cur.date}.\nThe year in the date string should probably have at least 3 digits.\n(e.g. 'YYYY')`,
+      );
     }
 
     const newCur = { ...cur, date: dateKey };
