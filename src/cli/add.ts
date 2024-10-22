@@ -5,6 +5,7 @@ import inquirer from "inquirer";
 import { Command } from "commander";
 import { logger } from "../util/logger";
 import { loading } from "../util/loading";
+import { handleError } from "../util/handle-error";
 
 export const add = new Command()
   .name("add")
@@ -81,12 +82,12 @@ export const add = new Command()
         // RSC 처리 (isRsc가 true일 경우 Calendar.jsx 또는 Calendar.tsx에 "use client" 추가)
         if (isRsc && filePath.includes("Calendar")) {
           const rscComponentSpinner = loading(
-            "Adding 'use client' to Calendar component...",
+            "Adding 'use client' to Calendar component..."
           ).start();
           fileContent = `"use client";\n${fileContent}`;
           await fs.writeFile(localFilePath, fileContent, "utf-8");
           rscComponentSpinner.succeed(
-            "Added 'use client' to Calendar component",
+            "Added 'use client' to Calendar component"
           );
         }
       }
@@ -94,10 +95,6 @@ export const add = new Command()
       logger.success("Your component is now ready. Enjoy using it!");
     } catch (error) {
       spinner.fail("Operation failed.");
-      if (error instanceof Error) {
-        logger.error(error.message);
-      } else {
-        logger.error(String(error));
-      }
+      handleError(error);
     }
   });

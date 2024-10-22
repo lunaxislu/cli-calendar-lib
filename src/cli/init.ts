@@ -11,13 +11,12 @@ import {
   updateWithTsmorphToTailwindConfig,
 } from "../util/get-project-info";
 import { logger } from "../util/logger";
-import { getPackageInfo, readPackageJson } from "../util/get-package-info";
 import inquirer from "inquirer";
 import { getCompatibleInfo } from "../util/get-compatible-info";
+import { handleError } from "../util/handle-error";
 
 export type ModuleConfig = {
   name: string;
-  version: string;
   description: string;
   packageManager: "yarn" | "pnpm" | "bun" | "npm";
   isSrcDir: boolean;
@@ -35,9 +34,7 @@ export const init = new Command()
     const cwd = process.cwd();
     const spinner = loading("Detecting project info...").start();
     try {
-      const compatibleSpinner = loading("Check Compatible Project").start();
       const { projectPackageJSON } = await getCompatibleInfo(cwd);
-      compatibleSpinner.succeed("Well Done...");
 
       // 1. 프로젝트 정보를 수집
       const projectInfo = await getProjectInfo(cwd);
@@ -45,7 +42,7 @@ export const init = new Command()
       if (!projectInfo) {
         return logger.error(
           "you must install packageManager : npm , pnpm or yarn",
-          process.exit(1),
+          process.exit(1)
         );
       }
 
@@ -83,7 +80,7 @@ export const init = new Command()
 
         if (!isTailwindInstalled) {
           const tailwindSpinner = loading(
-            "Tailwind is not installed. Installing Tailwind...",
+            "Tailwind is not installed. Installing Tailwind..."
           ).start();
 
           await execa(
@@ -94,7 +91,7 @@ export const init = new Command()
               "postcss",
               "autoprefixer",
             ],
-            { cwd, stdio: "inherit" },
+            { cwd, stdio: "inherit" }
           );
           tailwindSpinner.succeed("Tailwind installed successfully.");
         }
@@ -104,7 +101,7 @@ export const init = new Command()
         if (!tailwindConfigPath) {
           logger.info("No tailwind.config file found. Creating one...");
           const tailwindConfigSpinner = loading(
-            "Creating Tailwind config...",
+            "Creating Tailwind config..."
           ).start();
 
           if (packageManager === "npm") {
@@ -145,7 +142,7 @@ export const init = new Command()
         // Tailwind 설정 파일을 업데이트하는 함수 호출
         await updateWithTsmorphToTailwindConfig(
           tailwindConfigPath,
-          contentPaths,
+          contentPaths
         );
         logger.success("Checked/Updated Tailwind config content.");
 
@@ -157,18 +154,12 @@ export const init = new Command()
           "tailwind-merge" in projectDevDependencies;
 
         if (!isTailwindMergeInstalled) {
-          const tailwindMergeSpinner = loading(
-            "Installing tailwind-merge...",
-          ).start();
           await execa(
             packageManager,
             [packageManager === "npm" ? "install" : "add", "tailwind-merge"],
-            { cwd, stdio: "inherit" },
+            { cwd, stdio: "inherit" }
           );
-          tailwindMergeSpinner.succeed(
-            "tailwind-merge installed successfully.",
-          );
-        } else {
+
           logger.success("tailwind-merge is already installed.");
         }
         // index.css 또는 global.css 파일에 @tailwind base 추가 확인
@@ -189,18 +180,11 @@ export const init = new Command()
 
         logger.info("Day.js is not installed. Installing...");
 
-        const dayjsSpinner = loading("Installing Day.js...").start();
-        try {
-          await execa(
-            packageManager,
-            [packageManager === "npm" ? "install" : "add", `dayjs`],
-            { cwd, stdio: "inherit" },
-          );
-          dayjsSpinner.succeed("Day.js installed.");
-        } catch (err) {
-          throw err;
-        }
-      } else {
+        await execa(
+          packageManager,
+          [packageManager === "npm" ? "install" : "add", `dayjs`],
+          { cwd, stdio: "inherit" }
+        );
         logger.success("Day.js is already installed.");
       }
 
@@ -211,25 +195,17 @@ export const init = new Command()
           devDependencies["@types/css-modules"];
 
         if (!isCssModulesTypesInstalled) {
-          const cssModulesSpinner = loading(
-            "Installing @types/css-modules...",
-          ).start();
-          try {
-            const installCommand =
-              packageManager === "npm"
-                ? ["install", "--save-dev", "@types/css-modules"]
-                : ["add", "-D", "@types/css-modules"]; // yarn, pnpm 공통 처리
+          logger.info("Installing @types/css-modules...");
 
-            await execa(packageManager, installCommand, {
-              cwd,
-              stdio: "inherit",
-            });
-            cssModulesSpinner.succeed("@types/css-modules installed.");
-          } catch (err) {
-            cssModulesSpinner.fail("Failed to install @types/css-modules.");
-            throw err;
-          }
-        } else {
+          const installCommand =
+            packageManager === "npm"
+              ? ["install", "--save-dev", "@types/css-modules"]
+              : ["add", "-D", "@types/css-modules"]; // yarn, pnpm 공통 처리
+
+          await execa(packageManager, installCommand, {
+            cwd,
+            stdio: "inherit",
+          });
           logger.success("@types/css-modules is already installed.");
         }
       }
@@ -242,31 +218,25 @@ export const init = new Command()
         "class-variance-authority" in projectDevDependencies;
 
       if (!isClsxInstalled && styleChoice === "Tailwind") {
-        const clsxSpinner = loading("Installing clsx...").start();
+        logger.info("Installing clsx...");
         await execa(
           packageManager,
           [packageManager === "npm" ? "install" : "add", "clsx"],
-          { cwd, stdio: "inherit" },
+          { cwd, stdio: "inherit" }
         );
-        clsxSpinner.succeed("clsx installed successfully.");
-      } else if (isClsxInstalled && styleChoice === "Tailwind") {
-        logger.success("clsx is already installed.");
+        logger.success("clsx installed successfully.");
       }
 
       if (!isCvaInstalled) {
-        const cvaSpinner = loading(
-          "Installing class-variance-authority...",
-        ).start();
+        logger.info("Installing class-variance-authority...");
         await execa(
           packageManager,
           [
             packageManager === "npm" ? "install" : "add",
             "class-variance-authority",
           ],
-          { cwd, stdio: "inherit" },
+          { cwd, stdio: "inherit" }
         );
-        cvaSpinner.succeed("class-variance-authority installed successfully.");
-      } else {
         logger.success("class-variance-authority is already installed.");
       }
 
@@ -299,7 +269,6 @@ export const init = new Command()
       /**
        * module.json write
        */
-      const packageInfo = getPackageInfo();
       // isTsx 값에 따라 'javascript' 또는 'typescript' 폴더를 선택
       const languageFolder = isTsx ? "typescript" : "javascript";
       // styleType 값에 따라 'calendar-css-module' 또는 'calendar-tw' 폴더를 선택
@@ -312,7 +281,6 @@ export const init = new Command()
       // 6. module.json 파일 생성
       const moduleJson = {
         name: "Calendar",
-        version: packageInfo.version || "1.0.0" /**@Todo version FIX */,
         description: "A customizable calendar component using Day.js",
         packageManager: projectInfo.packageManager,
         isSrcDir: projectInfo.isSrcDir,
@@ -327,12 +295,14 @@ export const init = new Command()
       await fs.writeFile(
         moduleJsonPath,
         JSON.stringify(moduleJson, null, 2),
-        "utf8",
+        "utf8"
       );
       logger.success(`module.json has been created at ${moduleJsonPath}`);
+      logger.break();
+      logger.info(`Now you may add calendar component`);
     } catch (error) {
       spinner.fail("Failed to initialize the project");
       logger.error("Failed to initialize the project");
-      return;
+      handleError(error);
     }
   });

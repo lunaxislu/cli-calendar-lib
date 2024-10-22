@@ -1,8 +1,4 @@
-import { CosmiconfigResult } from "cosmiconfig";
-import path from "path";
-
 import fs from "fs-extra";
-import { loading } from "../loading";
 import {
   ArrayLiteralExpression,
   ObjectLiteralExpression,
@@ -42,7 +38,7 @@ export async function updateReactJSEslint(eslintConfig: Config) {
       });
     if (configWithRules) {
       const rulesProperty = configWithRules.getProperty(
-        "rules",
+        "rules"
       ) as PropertyAssignment;
 
       const rulesObject =
@@ -50,7 +46,7 @@ export async function updateReactJSEslint(eslintConfig: Config) {
 
       const quoteChar = getQuoteChar(rulesObject);
       const targetEsLintProperty = rulesObject.getProperty(
-        `${quoteChar}react/prop-types${quoteChar}`,
+        `${quoteChar}react/prop-types${quoteChar}`
       ) as PropertyAssignment;
 
       if (targetEsLintProperty) {
@@ -67,7 +63,7 @@ export async function updateReactJSEslint(eslintConfig: Config) {
 
     if (!configWithRules) {
       const objectLiterals = sourceFile.getDescendantsOfKind(
-        SyntaxKind.ObjectLiteralExpression,
+        SyntaxKind.ObjectLiteralExpression
       )[0];
 
       const quoteChar = getQuoteChar(objectLiterals);
@@ -82,8 +78,8 @@ export async function updateReactJSEslint(eslintConfig: Config) {
   } catch (err) {
     return console.log(
       `${highlighter.info(
-        "Something Wrong \n But That's Okay Just Edit Your Config of Eslint",
-      )}`,
+        "Something Wrong \n But That's Okay Just Edit Your Config of Eslint"
+      )}`
     );
   }
 }
@@ -99,7 +95,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
 
       // Used Set .... 역시.. 재밌군...
       const extendsSet = new Set(
-        typeof config.extends === "string" ? [config.extends] : config.extends,
+        typeof config.extends === "string" ? [config.extends] : config.extends
       );
       extendsSet.add("next/babel");
       config.extends = Array.from(extendsSet);
@@ -120,7 +116,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
     // extends property 있을 때
     if (configWithExtends) {
       const extendsProperty = configWithExtends.getProperty(
-        "extends",
+        "extends"
       ) as PropertyAssignment;
       const quoteChar = getQuoteChar(configWithExtends);
       const extendsInitializer = extendsProperty.getInitializer();
@@ -133,7 +129,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
           `${quoteChar}next/babel${quoteChar}`,
         ]); // Set으로 중복 방지
         extendsProperty.setInitializer(
-          `[${Array.from(newExtendsArray).join(", ")}]`,
+          `[${Array.from(newExtendsArray).join(", ")}]`
         );
       }
       if (kind === SyntaxKind.ArrayLiteralExpression && extendsInitializer) {
@@ -150,7 +146,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
 
         // 배열로 다시 설정
         extendsProperty.setInitializer(
-          `[${Array.from(newExtendsArray).join(", ")}]`,
+          `[${Array.from(newExtendsArray).join(", ")}]`
         );
       }
       await sourceFile.save();
@@ -160,7 +156,7 @@ export async function updateNextJSEslint(eslintConfig: Config) {
     // extends property 없을 때
     if (!configWithExtends) {
       const objectLiterals = sourceFile.getDescendantsOfKind(
-        SyntaxKind.ObjectLiteralExpression,
+        SyntaxKind.ObjectLiteralExpression
       )[0];
 
       const quoteChar = getQuoteChar(objectLiterals);
@@ -174,8 +170,8 @@ export async function updateNextJSEslint(eslintConfig: Config) {
   } catch (err) {
     return console.log(
       `${highlighter.info(
-        "Something Wrong \n But That's Okay Just Edit Your Config of Eslint",
-      )}`,
+        "Something Wrong \n But That's Okay Just Edit Your Config of Eslint"
+      )}`
     );
   }
 }
