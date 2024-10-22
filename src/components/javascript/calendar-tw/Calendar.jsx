@@ -461,7 +461,7 @@ function formattedByDate(array, format = DISPLAY_FORMAT) {
 
     if (!dateKey) {
       throw new Error(
-        `\nInvalid date: ${cur.date}.\nThe year in the date string should probably have at least 3 digits.\n(e.g. 'YYYY')`,
+        `\nInvalid date: ${cur.date}.\nThe year in the date string should have at 4 digits.\n(e.g. 'YYYY....')`,
       );
     }
 
